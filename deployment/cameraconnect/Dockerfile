@@ -1,4 +1,5 @@
 FROM python:3.8-slim-buster
+# 3.8 since harvesters is not supported in python 3.9 or 3.10, as of 29.10.21
 
 WORKDIR /app
 
