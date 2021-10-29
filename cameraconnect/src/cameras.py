@@ -728,6 +728,10 @@ class GenICam(CamGeneral):
             self._start_acquisition()
             logger.debug("Camera restarted. Ready to fetch an image.")
 
+    def disconnect_camera(self):
+        self.ia.destroy()
+        self.h.reset()
+
     def disconnect(self) -> None:
         """
         Deactivate acquisition and disconnect from camera.
@@ -743,8 +747,7 @@ class GenICam(CamGeneral):
         super().disconnect()
 
         # ... GenICam (destroy image acquirer)
-        self.ia.destroy()
-        self.h.reset()
+        self.disconnect_camera()
 
         logger.debug("Disconnected from GenICam camera.")
 
@@ -776,6 +779,7 @@ class DummyCamera(CamGeneral):
             cv2.imwrite(img_save_dir, retrieved_image)
 
             logger.debug("Image saved to {}".format(img_save_dir))
+
 
     def __del__(self):
         pass  # nothing special to do for this class
