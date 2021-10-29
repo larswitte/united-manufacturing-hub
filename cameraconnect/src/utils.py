@@ -12,7 +12,7 @@ def get_logger(application: str, name: str,
                base_level: type(logging.WARNING) = logging.WARNING,
                log_file: str = None, debug: bool = False,
                file_log_disabled: bool = False,
-               log_prefix:str="PYTHON_") -> logging.Logger:
+               log_prefix: str = "PYTHON_") -> logging.Logger:
     """
     Convenience function to get a logger object with unified output style and channels.
 
@@ -143,26 +143,26 @@ def get_logger_from_env(application: str, name: str, log_prefix: str = "PYTHON_"
     Returns:
         logger(logging.logger): logger object to log with
     """
-    LOGGING_LEVEL = os.getenv(f'{log_prefix}LOGGING_LEVEL', 'WARNING').upper()
-    if LOGGING_LEVEL == "DEBUG":
+    logging_level = os.getenv(f'{log_prefix}LOGGING_LEVEL', 'WARNING').upper()
+    if logging_level == "DEBUG":
         logger = get_logger(application=application, name=name, base_level=logging.DEBUG,
                             stdout_level=logging.DEBUG, debug=True, log_prefix=log_prefix)
-    elif LOGGING_LEVEL == "INFO":
+    elif logging_level == "INFO":
         logger = get_logger(application=application, name=name, base_level=logging.INFO,
                             stdout_level=logging.INFO, log_prefix=log_prefix)
-    elif LOGGING_LEVEL == "WARNING":
+    elif logging_level == "WARNING":
         logger = get_logger(application=application, name=name, base_level=logging.WARNING,
                             stdout_level=logging.WARNING, log_prefix=log_prefix)
-    elif LOGGING_LEVEL == "ERROR":
+    elif logging_level == "ERROR":
         logger = get_logger(application=application, name=name, base_level=logging.ERROR,
                             stdout_level=logging.ERROR, log_prefix=log_prefix)
-    elif LOGGING_LEVEL == "CRITICAL":
+    elif logging_level == "CRITICAL":
         logger = get_logger(application=application, name=name, base_level=logging.CRITICAL,
                             stdout_level=logging.DEBUG, log_prefix=log_prefix)
     else:
         logger = get_logger(application=application, name=name, base_level=logging.WARNING,
                             stdout_level=logging.INFO,
                             log_prefix=log_prefix)  # default value, in case you mess up the setting
-        logger.warning(f"log setting invalid, < {LOGGING_LEVEL} > is not a valid log setting")
+        logger.warning(f"log setting invalid, < {logging_level} > is not a valid log setting")
 
     return logger
