@@ -26,8 +26,9 @@ def get_logger(application: str, name: str,
         If you require the logs of multiple sub applications to be in the same file merge multiple outputs files with a
         script.
     Environment:
-        Uses the following env variables
-
+        Uses the following env variables:
+            PYTHON_LOG_FILE = file location string
+            PYTHON_LOG_DEBUG = true, to force debug to true, everything else does not affect the program
     Args:
         application: name of the application the logger is used in e.g. build_phase
         name: name of the sub part the logger is used in e.g. models
@@ -48,7 +49,8 @@ def get_logger(application: str, name: str,
     custom_log = False
     if (base_level % 10 != 0) or (stdout_level % 10 != 0) or (stderr_level % 10 != 0):
         custom_log = True
-
+    if os.getenv("PYTHON_LOG_DEBUG", "false").lower() == "true":
+        debug = True
     if debug:
         base_level = min(logging.DEBUG, base_level)
         stdout_level = min(logging.INFO, stdout_level)
@@ -86,8 +88,12 @@ def get_logger(application: str, name: str,
     logger.addHandler(stdout_handler)
     logger.addHandler(stderr_handler)
 
+    if os.getenv("PYTHON_LOG_DEBUG", "false").lower() == "true":
+        logger.info("log level was changed due to env variable")
+
     if debug:
         logger.info("level was changed due to debug = True")
+
     if custom_log:
         logger.warning(f"logger is in custom mode with levels base: {base_level} "
                        f"out: {stdout_level} err: {stderr_level}")
