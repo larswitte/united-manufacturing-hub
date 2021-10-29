@@ -25,6 +25,8 @@ def get_logger(application: str, name: str,
         that may crash the application and would be a pain to troubleshoot.
         If you require the logs of multiple sub applications to be in the same file merge multiple outputs files with a
         script.
+    Environment:
+        Uses the following env variables
 
     Args:
         application: name of the application the logger is used in e.g. build_phase
@@ -64,7 +66,7 @@ def get_logger(application: str, name: str,
     # create formatter and add it to the handlers
 
     formatter = logging.Formatter('{"level":"%(levelname)s","ts":"%(created)s",'
-                                  '"caller":"%(name)s","msg":"%(message)s}"')  # format to be similar to zap
+                                  '"caller":"%(name)s","msg":"%(message)s"}')  # format to be similar to zap
     stdout_handler.setFormatter(formatter)
     stderr_handler.setFormatter(formatter)
 
