@@ -38,7 +38,7 @@ class BaseTrigger:
         self.errors_since_last_success += 1
         self.total_errors += 1
         logger.debug(f"error logged with counters total: {self.errors_since_last_success} "
-                      f"successive: {self.total_errors}")
+                     f"successive: {self.total_errors}")
         if self.errors_since_last_success > ERROR_TOLERANCE:
             sys.exit(f"error tolerance exceeded with total errors {self.total_errors} "
                      f"and successive errors{self.errors_since_last_success}")
@@ -108,6 +108,7 @@ class MqttTrigger(BaseTrigger):
         logger.info("Subscribed for input to topic: " + str(self.mqtt_topic))
         # Call the _on_message when message is received from broker
         self.client.on_message = self._on_message
+        self.image_number = 0
 
     # Is called always when a new message is received
     def _on_message(self, client, userdata, msg) -> None:
@@ -128,58 +129,68 @@ class MqttTrigger(BaseTrigger):
         Returns:
             None     
         """
-        # If no acquisition delay skip the following
-        if self.acquisition_delay > 0.0:
-            # Get timestamp of time  when trigger was received. 
-            #   Measured in ms since epoch. Epoch is defined as 
-            #   January 1, 1970, 00:00:00 (UTC)
-            timestamp_ms = int(round(time.time() * 1000))
+        try:
+            # If no acquisition delay skip the following
+            if self.acquisition_delay > 0.0:
+                # Get timestamp of time  when trigger was received.
+                #   Measured in ms since epoch. Epoch is defined as
+                #   January 1, 1970, 00:00:00 (UTC)
+                timestamp_ms = int(round(time.time() * 1000))
 
-        # Deserialize Json
-        message = json.loads(msg.payload)
-        logger.info("Image acquisition trigger received")
+            # Deserialize Json
+            message = json.loads(msg.payload)
+            logger.info("Image acquisition trigger received")
 
-        # If no acquisition delay skip the following
-        if self.acquisition_delay > 0.0:
-            # Check if timestamp in ms is provided in message. Then
-            #   use this timestamp instead.
-            if 'timestamp_ms' in message:
-                timestamp_ms = int(message['timestamp_ms'])
-            time_to_get_image: float = timestamp_ms + round(self.acquisition_delay * 1000)  # unix time in ms
-
-        # If no acquisition delay skip the following
-        if self.acquisition_delay > 0.0:
-
-            if time_to_get_image < round(time.time() * 1000):
-                sys.exit(
-                    "Environment Error: ACQUISITION_DELAY to short ||| Set acquisition delay is shorter than the processing time.")
-            time_to_wait = time_to_get_image / 1000 - time.time()
-            if 60 * 60 > time_to_wait > 0:  # in case of transformation error does not freeze the process for more
-                # than 1 hour
-                logger.debug(f"sleeping for {time_to_wait} to capture image")
-                time.sleep(time_to_wait)
-            else:
-                logger.error(f"could not wait for image acquisition with delay: {time_to_wait}")
-                self.count_error()
-
-        # Get an image
-        logger.info("Get an image.")
-        while True:
-            try:
-                self.cam.get_image()
-                break
-            except Exception as _e:
-                self.count_error()
-                if self.retry_time == 0:
-                    logger.error(f"Failed to get image at:{datetime.datetime.now(tz=datetime.timezone.utc)} "
-                                  f"with {_e} "
-                                  f"no retry time configured, aborting")
-                    sys.exit(f"could not gather triggered mage with {_e.with_traceback()}")
+            # If no acquisition delay skip the following
+            if self.acquisition_delay > 0.0:
+                # Check if timestamp in ms is provided in message. Then
+                #   use this timestamp instead.
+                if 'timestamp_ms' in message:
+                    timestamp_ms = int(message['timestamp_ms'])
                 else:
-                    logger.error(f"Failed to get image at:{datetime.datetime.now(tz=datetime.timezone.utc)} "
-                                  f"with {_e} "
-                                  f", retrying in {ttw} ")
-                    time.sleep(self.rety_time)
+                    timestamp_ms = time.time() * 1000  # sets acquisition to start after acquisition delay
+                    # if no timestamp is provided
+                time_to_get_image: float = timestamp_ms + round(self.acquisition_delay * 1000)  # unix time in ms
+
+                if time_to_get_image < round(time.time() * 1000):
+                    logger.critical("Environment Error: ACQUISITION_DELAY to short ||| Set acquisition delay is "
+                                    "shorter than the processing time.")
+                    sys.exit(-1)
+
+                time_to_wait = (
+                                       time_to_get_image / 1000) - time.time()  # converts ms to delta s until image needs to be taken
+                if 60 * 60 > time_to_wait > 0:  # in case of transformation error does not freeze the process for more
+                    # than 1 hour
+                    logger.debug(f"sleeping for {time_to_wait} to capture image")
+
+                    time.sleep(time_to_wait)
+                else:
+                    logger.error(f"could not wait for image acquisition with delay: {time_to_wait}")
+                    self.count_error()
+
+            # Get an image
+            logger.info("Get an image.")
+            while True:
+                try:
+                    self.cam.get_image()
+                    break
+                except Exception as _e:
+                    self.count_error()
+                    if self.retry_time == 0:
+                        logger.error(f"Failed to get image at:{datetime.datetime.now(tz=datetime.timezone.utc)} "
+                                     f"with {_e} "
+                                     f"no retry time configured, aborting")
+                        sys.exit(f"could not gather triggered mage with {_e.with_traceback()}")
+                    else:
+                        logger.error(f"Failed to get image at:{datetime.datetime.now(tz=datetime.timezone.utc)} "
+                                     f"with {_e} "
+                                     f", retrying in {self.retry_time} ")
+                        time.sleep(self.rety_time)
+        except Exception as _e:  # wildcard to catch interesting side effect of paho mqtts threading behaviour +
+            # harvesters instability with certain producer files, which sometimes lead to zombie threads blocking the
+            # acquisition indefinitely
+            self.count_error()
+            logger.error(f"failed to process message: {msg} with {_e.with_traceback()}")
 
     def disconnect(self) -> None:
         """
@@ -245,8 +256,8 @@ class ContinuousTrigger(BaseTrigger):
                 except Exception as _e:
                     ttw = cycle_time * RETRY_DELAY
                     logger.error(f"Failed to get image at:{datetime.datetime.now(tz=datetime.timezone.utc)} "
-                                     f"with {_e} "
-                                     f", retrying in {ttw} ")
+                                 f"with {_e} "
+                                 f", retrying in {ttw} ")
                     self.count_error()
                     time.sleep(ttw)
 

@@ -41,19 +41,20 @@ CYCLE_TIME = float(os.environ.get('CYCLE_TIME', 10.0))
 CAMERA_INTERFACE = os.environ.get('CAMERA_INTERFACE')
 MAC_ADDRESS = os.environ.get('MAC_ADDRESS', '')
 TRANSMITTER_ID = os.environ.get('CUBE_TRANSMITTERID', '')
-MQTT_ROOT_TOPIC= os.environ.get('MQTT_ROOT_TOPIC',"ia")
+MQTT_ROOT_TOPIC = os.environ.get('MQTT_ROOT_TOPIC', "ia")
 
 MQTT_TOPIC_TRIGGER = f"{MQTT_ROOT_TOPIC}/trigger/{TRANSMITTER_ID}/{MAC_ADDRESS}"
 MQTT_TOPIC_IMAGE = f"{MQTT_ROOT_TOPIC}/rawImage/{TRANSMITTER_ID}/{MAC_ADDRESS}"
 # GenICam settings
 DEFAULT_GENTL_PRODUCER_PATH = os.environ.get('DEFAULT_GENTL_PRODUCER_PATH', '/app/assets/producer_files')
 USER_SET_SELECTOR = os.environ.get('USER_SET_SELECTOR', 'Default')
-IMAGE_WIDTH = int(os.environ.get('IMAGE_WIDTH', 800))
-IMAGE_HEIGHT = int(os.environ.get('IMAGE_HEIGHT', 800))
-PIXEL_FORMAT = os.environ.get('PIXEL_FORMAT', 'Mono8')
-IMAGE_CHANNELS = os.environ.get('IMAGE_CHANNELS', 'None')
-EXPOSURE_TIME = os.environ.get('EXPOSURE_TIME', 'None')
-
+IMAGE_WIDTH = int(os.environ.get('IMAGE_WIDTH', 800))  # supported by most cameras
+IMAGE_HEIGHT = int(os.environ.get('IMAGE_HEIGHT', 800))  # supported by most cameras
+PIXEL_FORMAT = os.environ.get('PIXEL_FORMAT', 'Mono8')  # supported by most cameras
+IMAGE_CHANNELS = os.environ.get('IMAGE_CHANNELS', 'None')  # None = autodetect
+EXPOSURE_TIME = os.environ.get('EXPOSURE_TIME', 'None')  # None = autodetect
+TIMEOUT_TIME = int(os.environ.get("TIMEOUT_TIME", 60))  # time after which the container restarts if no images were
+# generated to prevent zombie mqtt
 EXPOSURE_AUTO = os.environ.get('EXPOSURE_AUTO', 'Off')
 if EXPOSURE_AUTO.upper() == "OFF" or EXPOSURE_AUTO.upper() == "NONE":
     EXPOSURE_AUTO = None
@@ -61,7 +62,6 @@ if EXPOSURE_TIME.upper() == "OFF" or EXPOSURE_TIME.upper() == "NONE":
     EXPOSURE_TIME = None
 GAIN_AUTO = os.environ.get('GAIN_AUTO', 'Off')
 BALANCE_WHITE_AUTO = os.environ.get('BALANCE_WHITE_AUTO', 'Off')
-
 if IMAGE_CHANNELS != 'None':
     IMAGE_CHANNELS = int(IMAGE_CHANNELS)
 logger = get_logger_from_env(application="cammeraconnect", name="main")
@@ -69,7 +69,7 @@ logger = get_logger_from_env(application="cammeraconnect", name="main")
 ### End of loading settings ###
 if __name__ == "__main__":
 
-    if EXPOSURE_TIME != 'None':
+    if EXPOSURE_TIME is not None:
         try:
             EXPOSURE_TIME = float(EXPOSURE_TIME)
         except TypeError:
@@ -117,11 +117,20 @@ if __name__ == "__main__":
         #   the received mqtt data
         trigger = MqttTrigger(cam, CAMERA_INTERFACE, ACQUISITION_DELAY, MQTT_HOST, MQTT_PORT, MQTT_TOPIC_TRIGGER)
 
-        # Run forever to stay connected 
+        # Run forever to stay connected
+        previous_image_number = copy.copy(trigger.image_number)
         while True:
             # Avoid overloading the CPU
-            time.sleep(10)
-            logger.debug("Still running.")
+            logger.info(f"awaiting triggers for {TIMEOUT_TIME}")
+            time.sleep(TIMEOUT_TIME)
+            if trigger.image_number == previous_image_number:
+                logger.error(f"image acquisition timed out after {trigger.image_number} images ")
+                sys.exit(-1)
+            else:
+                logger.info(f"{trigger.image_number - previous_image_number} images in last loop")
+                previous_image_number = trigger.image_number
+
+            logger.info("Still running.")
     else:
         # Stop system, not possible to run with this setting
         sys.exit(
