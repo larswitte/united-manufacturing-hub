@@ -78,7 +78,7 @@ class CamGeneral(ABC):
         logging.debug("Connected to MQTT broker.")
         self.client.loop_start()
 
-    def _publish_mqtt(self, image) -> None:
+    def _publish_mqtt(self, image: np.ndarray) -> None:
         """
         Sends the timestamp of the time at at which the image was
         taken, and the image itself to the MQTT broker.
