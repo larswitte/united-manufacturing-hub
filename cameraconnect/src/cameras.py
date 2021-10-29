@@ -45,7 +45,7 @@ class CamGeneral(ABC):
     This class defines only the basic constructor, the
     method _publish_mqtt() to publish the results to the MQTT
     broker, the method disconnect() and the abstract method
-    get_image(). Children must define the get_image() method.
+    get_image(). Children must define the get_image() and __del__   method.
 
     Args of constructor:
         mqtt_host[string]:      Hostname or IP address of the MQTT broker
@@ -186,6 +186,15 @@ class CamGeneral(ABC):
         self.client.loop_stop()
         self.client.disconnect()
         logger.debug("Disconnected from MQTT broker.")
+
+    @abstractmethod
+    def __del__(self):
+        """
+        cleans up the object
+        Returns:
+
+        """
+        pass
 
 
 class GenICam(CamGeneral):
@@ -433,8 +442,8 @@ class GenICam(CamGeneral):
 
             if not first:
                 logger.warning(f"camera {camera} with ident: {camera_identifier} is not first one matching the target "
-                                f"id: {self.mac_address}  |"
-                                f" ident: {object_identifier}, skipping")
+                               f"id: {self.mac_address}  |"
+                               f" ident: {object_identifier}, skipping")
                 continue  # using continue instead of break to preserve debug output
 
             if camera_identifier.find(object_identifier) != -1:
@@ -454,8 +463,8 @@ class GenICam(CamGeneral):
             logger.error(
                 "No camera with the specified MAC address available. Please specify MAC address in env file correctly.")
             logger.info(f"attempted to connect to cameras: "
-                         f"{[(camera.id_, self.__id_processing(str(camera.id_))) for camera in self.h.device_info_list]}"
-                         f"this object has mac_address {self.mac_address} and ident: {object_identifier}")
+                        f"{[(camera.id_, self.__id_processing(str(camera.id_))) for camera in self.h.device_info_list]}"
+                        f"this object has mac_address {self.mac_address} and ident: {object_identifier}")
             sys.exit("Unknown or Invalid MAC address.")
         ## Set some default settings
         # This is required because of a bug in the harvesters
@@ -473,7 +482,7 @@ class GenICam(CamGeneral):
     def __id_processing(cls, identifier: str) -> str:
         """
         helper func to unify pre processing of identifier / mac addresses to ensure compatibility with different CTI
-        Files, this is not exhaustive, so if you find can not use your hardware with these expressions please create an
+        Files, this is not exhaustive, so if you can not use your hardware with these expressions please create an
         issue on github
         :params:
         identifier: str : input string
@@ -731,7 +740,7 @@ class GenICam(CamGeneral):
         """
         # Close the connection to ...
         # ... MQTT (and stop loop)
-        CamGeneral.disconnect(self)
+        super().disconnect()
 
         # ... GenICam (destroy image acquirer)
         self.ia.destroy()
@@ -767,3 +776,6 @@ class DummyCamera(CamGeneral):
             cv2.imwrite(img_save_dir, retrieved_image)
 
             logger.debug("Image saved to {}".format(img_save_dir))
+
+    def __del__(self):
+        pass  # nothing special to do for this class

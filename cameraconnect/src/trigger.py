@@ -11,17 +11,21 @@ import datetime
 import json
 import sys
 import time
-from utils import get_logger_from_env
-
+from typing import Union
+import atexit
 # Import libraries that had been installed with pip install
 import paho.mqtt.client as mqtt
+# import custom code
+from utils import get_logger_from_env
+from abc import ABC, abstractmethod
+import cameras  # for typing only
 
 logger = get_logger_from_env(application="cammeraconnect", name="trigger")
 ERROR_TOLERANCE = 20  # number of successive errors after which the application is terminated
 RETRY_DELAY = 0.1  # fraction of the cycle time after which to trigger a retry
 
 
-class BaseTrigger:
+class BaseTrigger(ABC):
     """
     base trigger with shared functionality, like error handling
     """
@@ -42,6 +46,13 @@ class BaseTrigger:
         if self.errors_since_last_success > ERROR_TOLERANCE:
             sys.exit(f"error tolerance exceeded with total errors {self.total_errors} "
                      f"and successive errors{self.errors_since_last_success}")
+
+    def __del__(self):
+        self.disconnect()
+
+    @abstractmethod
+    def disconnect(self):
+        pass
 
 
 class MqttTrigger(BaseTrigger):
@@ -72,7 +83,7 @@ class MqttTrigger(BaseTrigger):
         A connected instance of MqttTrigger
     """
 
-    def __init__(self, cam, interface, acquisition_delay, mqtt_host,
+    def __init__(self, cam: Union[cameras.GenICam, cameras.DummyCamera], interface, acquisition_delay, mqtt_host,
                  mqtt_port, mqtt_topic, retry_time=0) -> None:
         """
         Connect MQTT client.
@@ -109,6 +120,7 @@ class MqttTrigger(BaseTrigger):
         # Call the _on_message when message is received from broker
         self.client.on_message = self._on_message
         self.image_number = 0
+        atexit.register(self.__del__())
 
     # Is called always when a new message is received
     def _on_message(self, client, userdata, msg) -> None:
@@ -204,6 +216,7 @@ class MqttTrigger(BaseTrigger):
         """
         self.client.loop_stop()
         self.client.disconnect()
+        self.cam.disconnect()
 
 
 class ContinuousTrigger(BaseTrigger):
@@ -227,7 +240,7 @@ class ContinuousTrigger(BaseTrigger):
         stay forever.
     """
 
-    def __init__(self, cam, interface, cycle_time) -> None:
+    def __init__(self, cam: Union[cameras.GenICam, cameras.DummyCamera], interface, cycle_time) -> None:
         """
         While-loop with time measuring to have always the same 
         cycle time.
@@ -282,3 +295,6 @@ class ContinuousTrigger(BaseTrigger):
                 self.errors_since_last_success = 0
                 logger.debug(f"Delay {delay} s to reach constant cycle time.")
                 time.sleep(delay)
+
+    def disconnect(self):
+        self.cam.disconnect()
