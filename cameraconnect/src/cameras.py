@@ -10,7 +10,6 @@ The module provides two classes:
 """
 
 # Import python in-built libraries
-import logging
 import re
 from abc import ABC, abstractmethod
 import time
@@ -18,9 +17,11 @@ import base64
 import json
 
 import datetime
-
 import os
 import sys
+
+# import other files
+from utils import get_logger_from_env
 
 # Import libraries that had been installed with pip install
 import paho.mqtt.client as mqtt
@@ -31,6 +32,8 @@ import numpy as np
 from genicam.gentl import TimeoutException
 from genicam.genapi import OutOfRangeException
 from harvesters.core import Harvester
+
+logger = get_logger_from_env(application="cammeraconnect", name="cameras")
 
 # Console Style elements for outpu
 HORIZONTAL_CONSOLE_LINE = "\n" + "_" * 80 + "\n"
@@ -75,7 +78,7 @@ class CamGeneral(ABC):
         # Connect to the Broker, default port for MQTT 1883
         self.client = mqtt.Client()
         self.client.connect(self.mqtt_host, self.mqtt_port)
-        logging.debug("Connected to MQTT broker.")
+        logger.debug("Connected to MQTT broker.")
         self.client.loop_start()
 
     def _publish_mqtt(self, image: np.ndarray) -> None:
@@ -150,9 +153,9 @@ class CamGeneral(ABC):
         message = json.dumps(prepared_message)
         # Publish the message
         ret = self.client.publish(self.mqtt_topic, message, qos=0)
-        logging.debug("Image No.: " + str(ret[1]))
+        logger.debug("Image No.: " + str(ret[1]))
 
-        logging.debug("Image sent to MQTT broker under topic: " + str(self.mqtt_topic))
+        logger.debug("Image sent to MQTT broker under topic: " + str(self.mqtt_topic))
 
     @abstractmethod
     def get_image(self) -> None:
@@ -182,7 +185,7 @@ class CamGeneral(ABC):
         """
         self.client.loop_stop()
         self.client.disconnect()
-        logging.debug("Disconnected from MQTT broker.")
+        logger.debug("Disconnected from MQTT broker.")
 
 
 class GenICam(CamGeneral):
@@ -347,8 +350,8 @@ class GenICam(CamGeneral):
                          mqtt_port=mqtt_port,
                          mqtt_topic=mqtt_topic,
                          mac_address=mac_address)
-        logging.debug("-" * 80)
-        logging.debug(f"initialised {super()} with {mqtt_host} {mqtt_port} {mqtt_topic} {mac_address}")
+        logger.debug("-" * 80)
+        logger.debug(f"initialised {super()} with {mqtt_host} {mqtt_port} {mqtt_topic} {mac_address}")
         self.gen_tl_producer_path_list = gen_tl_producer_path_list
         self.user_set_selector = user_set_selector
         self.image_width = image_width
@@ -366,7 +369,7 @@ class GenICam(CamGeneral):
         self._connect()
 
         # Apply configurations
-        logging.debug("#" * 31 + "applying settings" + "#" * 32)
+        logger.debug("#" * 31 + "applying settings" + "#" * 32)
 
         self._apply_settings()
 
@@ -396,10 +399,10 @@ class GenICam(CamGeneral):
         # Check if cti-file available, stop if none found
         if len(self.h.files) == 0:
             sys.exit("No valid cti file found")
-        logging.debug(HORIZONTAL_CONSOLE_LINE)
-        logging.debug("Currently available genTL Producer CTI files: ")
+        logger.debug(HORIZONTAL_CONSOLE_LINE)
+        logger.debug("Currently available genTL Producer CTI files: ")
         for file in self.h.files:
-            logging.debug(file)
+            logger.debug(file)
 
         # Update the list of remote devices; fills up your device
         #   information list; multiple devices in list possible
@@ -408,9 +411,9 @@ class GenICam(CamGeneral):
         if len(self.h.device_info_list) == 0:
             sys.exit("No compatible devices detected.")
         # Show remote devices in list
-        logging.debug("Available devices:")
+        logger.debug("Available devices:")
         for camera in self.h.device_info_list:
-            logging.debug(camera)
+            logger.debug(camera)
         # Create an image acquirer object specifying a target
         #   remote device
         # As argument also user_defined_name,
@@ -425,32 +428,32 @@ class GenICam(CamGeneral):
             # read cameras mac address
             # ATTENTION: only works with CTI files that deliver the MAC address to harvesters BAUMER SDK
             camera_identifier = self.__id_processing(camera.id_)
-            logging.debug(
+            logger.debug(
                 f"current device_mac_address: {camera_identifier}, {object_identifier}")
 
             if not first:
-                logging.warning(f"camera {camera} with ident: {camera_identifier} is not first one matching the target "
+                logger.warning(f"camera {camera} with ident: {camera_identifier} is not first one matching the target "
                                 f"id: {self.mac_address}  |"
                                 f" ident: {object_identifier}, skipping")
                 continue  # using continue instead of break to preserve debug output
 
             if camera_identifier.find(object_identifier) != -1:
                 try:
-                    logging.debug(f"attempting to connect to device {camera.id_} ident :{camera_identifier}")
+                    logger.debug(f"attempting to connect to device {camera.id_} ident :{camera_identifier}")
                     self.ia = self.h.create_image_acquirer(id_=camera.id_)
                     first = False
                 except Exception as _e:
-                    logging.error(
+                    logger.error(
                         "Camera is not reachable. Most likely another container already occupies the same camera. "
                         f"One camera can only be used by exactly one container at any time. {_e}")
                     sys.exit("Camera not reachable.")
-                logging.debug(f"Using: {camera} with ident {camera_identifier}")
-                logging.debug(HORIZONTAL_CONSOLE_LINE)
+                logger.debug(f"Using: {camera} with ident {camera_identifier}")
+                logger.debug(HORIZONTAL_CONSOLE_LINE)
 
         if not hasattr(self, "ia"):
-            logging.error(
+            logger.error(
                 "No camera with the specified MAC address available. Please specify MAC address in env file correctly.")
-            logging.info(f"attempted to connect to cameras: "
+            logger.info(f"attempted to connect to cameras: "
                          f"{[(camera.id_, self.__id_processing(str(camera.id_))) for camera in self.h.device_info_list]}"
                          f"this object has mac_address {self.mac_address} and ident: {object_identifier}")
             sys.exit("Unknown or Invalid MAC address.")
@@ -522,9 +525,9 @@ class GenICam(CamGeneral):
 
         # Get list of all available features of the camera
         node_map = dir(self.ia.remote_device.node_map)
-        logging.debug("Adjustable parameters for connected camera:")
+        logger.debug("Adjustable parameters for connected camera:")
         for setting in node_map:
-            logging.debug(setting)
+            logger.debug(setting)
 
         # If camera was already configured and configurations
         #   has been saved in user set, then set and load user
@@ -570,12 +573,12 @@ class GenICam(CamGeneral):
             self.ia.remote_device.node_map.PixelFormat.value = self.pixel_format
 
         # Set Exposure time
-        logging.debug(f"exposure auto :{self.exposure_auto} , exposure time {self.exposure_time}")
+        logger.debug(f"exposure auto :{self.exposure_auto} , exposure time {self.exposure_time}")
         if self.exposure_auto is not None:
             try:
                 self.ia.remote_device.node_map.ExposureTimeAbs.value = self.exposure_time
             except OutOfRangeException:
-                logging.error("Specified Exposure time too high for selected camera. Please choose smaller value.")
+                logger.error("Specified Exposure time too high for selected camera. Please choose smaller value.")
                 sys.exit(1)
 
         # Set ExposureAuto, GainAuto and BalanceWhiteAuto;
@@ -585,17 +588,17 @@ class GenICam(CamGeneral):
             if "ExposureAuto" in node_map:
                 self.ia.remote_device.node_map.ExposureAuto.value = self.exposure_auto
             else:
-                logging.warning("Camera does not support automatic adjustment of exposure time")
+                logger.warning("Camera does not support automatic adjustment of exposure time")
         if self.gain_auto is not None:
             if "GainAuto" in node_map:
                 self.ia.remote_device.node_map.GainAuto.value = self.gain_auto
             else:
-                logging.warning("Camera does not support automatic adjustment of gain")
+                logger.warning("Camera does not support automatic adjustment of gain")
         if self.balance_white_auto is not None:
             if "BalanceWhiteAuto" in node_map:
                 self.ia.remote_device.node_map.BalanceWhiteAuto.value = self.balance_white_auto
             else:
-                logging.warning("Camera does not support automatic adjustment of white balance")
+                logger.warning("Camera does not support automatic adjustment of white balance")
 
     def _start_acquisition(self) -> None:
         """
@@ -610,7 +613,7 @@ class GenICam(CamGeneral):
         """
         # Starts image acquisition with harvesters
         self.ia.start_acquisition()
-        logging.debug("Acquisition started.")
+        logger.debug("Acquisition started.")
 
     # Get image out of image stream
     def get_image(self) -> None:
@@ -626,7 +629,7 @@ class GenICam(CamGeneral):
         """
         # Try to fetch a buffer that has been filled up with an
         #   image
-        logging.debug("#" * 36 + "get image" + "#" * 35)
+        logger.debug("#" * 36 + "get image" + "#" * 35)
         try:
             # Default value
             retrieved_image = None
@@ -638,13 +641,13 @@ class GenICam(CamGeneral):
             with self.ia.fetch_buffer(timeout=20) as buffer:
                 # Do not use this buffer, use the next one
                 pass
-                logging.debug(f"buffer {buffer}")
+                logger.debug(f"buffer {buffer}")
 
             # Due to with statement buffer will automatically be
             #   queued
             with self.ia.fetch_buffer(timeout=20) as buffer:
-                logging.debug(HORIZONTAL_CONSOLE_LINE)
-                logging.debug("Image fetched.")
+                logger.debug(HORIZONTAL_CONSOLE_LINE)
+                logger.debug("Image fetched.")
                 # Create an alias of the 2D image component:
                 component = buffer.payload.components[0]
                 # Note that the number of components can be vary.
@@ -693,7 +696,7 @@ class GenICam(CamGeneral):
                     retrieved_image = cv2.cvtColor(retrieved_image, cv2.COLOR_RGB2BGR)
 
             self._publish_mqtt(retrieved_image)
-            logging.debug("Image converted and published to MQTT.")
+            logger.debug("Image converted and published to MQTT.")
 
             # Save image
             if self.image_storage_path:
@@ -703,18 +706,18 @@ class GenICam(CamGeneral):
                 img_save_dir = os.path.join(self.image_storage_path, "{}.jpg".format(timestamp))
                 cv2.imwrite(img_save_dir, retrieved_image)
 
-                logging.debug("Image saved to {}".format(img_save_dir))
+                logger.debug("Image saved to {}".format(img_save_dir))
 
         # If TimeoutException because no image was fetchable,
         #   restart the acquisition process
         except TimeoutException:
-            logging.error("Timeout ocurred during fetching an image. Camera reset and restart.")
+            logger.error("Timeout ocurred during fetching an image. Camera reset and restart.")
             self.ia.destroy()
             self.h.reset()
             self._connect()
             self._apply_settings()
             self._start_acquisition()
-            logging.debug("Camera restarted. Ready to fetch an image.")
+            logger.debug("Camera restarted. Ready to fetch an image.")
 
     def disconnect(self) -> None:
         """
@@ -734,7 +737,7 @@ class GenICam(CamGeneral):
         self.ia.destroy()
         self.h.reset()
 
-        logging.debug("Disconnected from GenICam camera.")
+        logger.debug("Disconnected from GenICam camera.")
 
 
 class DummyCamera(CamGeneral):
@@ -745,15 +748,15 @@ class DummyCamera(CamGeneral):
 
         # reads a static image which is part of stack
         img = cv2.imread("/app/assets/dummy_image.jpg")
-        logging.debug(HORIZONTAL_CONSOLE_LINE)
-        logging.debug("Image fetched.")
+        logger.debug(HORIZONTAL_CONSOLE_LINE)
+        logger.debug("Image fetched.")
         height, width, channels = img.shape
         retrieved_image = np.ndarray(buffer=img,
                                      dtype=np.uint8,
                                      shape=(height, width, channels))
 
         self._publish_mqtt(retrieved_image)
-        logging.debug("Image converted and published to MQTT.")
+        logger.debug("Image converted and published to MQTT.")
 
         # Save image
         if self.image_storage_path:
@@ -763,4 +766,4 @@ class DummyCamera(CamGeneral):
             img_save_dir = os.path.join(self.image_storage_path, "{}.jpg".format(timestamp))
             cv2.imwrite(img_save_dir, retrieved_image)
 
-            logging.debug("Image saved to {}".format(img_save_dir))
+            logger.debug("Image saved to {}".format(img_save_dir))

@@ -11,11 +11,12 @@ import datetime
 import json
 import sys
 import time
-import logging
+from utils import get_logger_from_env
 
 # Import libraries that had been installed with pip install
 import paho.mqtt.client as mqtt
 
+logger = get_logger_from_env(application="cammeraconnect", name="trigger")
 ERROR_TOLERANCE = 20  # number of successive errors after which the application is terminated
 RETRY_DELAY = 0.1  # fraction of the cycle time after which to trigger a retry
 
@@ -36,7 +37,7 @@ class BaseTrigger:
         """
         self.errors_since_last_success += 1
         self.total_errors += 1
-        logging.debug(f"error logged with counters total: {self.errors_since_last_success} "
+        logger.debug(f"error logged with counters total: {self.errors_since_last_success} "
                       f"successive: {self.total_errors}")
         if self.errors_since_last_success > ERROR_TOLERANCE:
             sys.exit(f"error tolerance exceeded with total errors {self.total_errors} "
@@ -104,7 +105,7 @@ class MqttTrigger(BaseTrigger):
         self.client.loop_start()
         # Subscribe to the given mqtt_topic
         self.client.subscribe(self.mqtt_topic)
-        logging.info("Subscribed for input to topic: " + str(self.mqtt_topic))
+        logger.info("Subscribed for input to topic: " + str(self.mqtt_topic))
         # Call the _on_message when message is received from broker
         self.client.on_message = self._on_message
 
@@ -136,7 +137,7 @@ class MqttTrigger(BaseTrigger):
 
         # Deserialize Json
         message = json.loads(msg.payload)
-        logging.info("Image acquisition trigger received")
+        logger.info("Image acquisition trigger received")
 
         # If no acquisition delay skip the following
         if self.acquisition_delay > 0.0:
@@ -155,14 +156,14 @@ class MqttTrigger(BaseTrigger):
             time_to_wait = time_to_get_image / 1000 - time.time()
             if 60 * 60 > time_to_wait > 0:  # in case of transformation error does not freeze the process for more
                 # than 1 hour
-                logging.debug(f"sleeping for {time_to_wait} to capture image")
+                logger.debug(f"sleeping for {time_to_wait} to capture image")
                 time.sleep(time_to_wait)
             else:
-                logging.error(f"could not wait for image acquisition with delay: {time_to_wait}")
+                logger.error(f"could not wait for image acquisition with delay: {time_to_wait}")
                 self.count_error()
 
         # Get an image
-        logging.info("Get an image.")
+        logger.info("Get an image.")
         while True:
             try:
                 self.cam.get_image()
@@ -170,12 +171,12 @@ class MqttTrigger(BaseTrigger):
             except Exception as _e:
                 self.count_error()
                 if self.retry_time == 0:
-                    logging.error(f"Failed to get image at:{datetime.datetime.now(tz=datetime.timezone.utc)} "
+                    logger.error(f"Failed to get image at:{datetime.datetime.now(tz=datetime.timezone.utc)} "
                                   f"with {_e} "
                                   f"no retry time configured, aborting")
                     sys.exit(f"could not gather triggered mage with {_e.with_traceback()}")
                 else:
-                    logging.error(f"Failed to get image at:{datetime.datetime.now(tz=datetime.timezone.utc)} "
+                    logger.error(f"Failed to get image at:{datetime.datetime.now(tz=datetime.timezone.utc)} "
                                   f"with {_e} "
                                   f", retrying in {ttw} ")
                     time.sleep(self.rety_time)
@@ -243,7 +244,7 @@ class ContinuousTrigger(BaseTrigger):
                     break
                 except Exception as _e:
                     ttw = cycle_time * RETRY_DELAY
-                    logging.error(f"Failed to get image at:{datetime.datetime.now(tz=datetime.timezone.utc)} "
+                    logger.error(f"Failed to get image at:{datetime.datetime.now(tz=datetime.timezone.utc)} "
                                      f"with {_e} "
                                      f", retrying in {ttw} ")
                     self.count_error()
@@ -252,15 +253,15 @@ class ContinuousTrigger(BaseTrigger):
             # Get actual time and subtract the start time from
             #   it to get the time which the current loop needed 
             #   to run the code
-            logging.debug(f"cycle time: {cycle_time}")
+            logger.debug(f"cycle time: {cycle_time}")
             loop_time = time.time() - timer_start
             # If the processing time is longer than the cycle 
             #   time throw error
             if loop_time > self.cycle_time:
-                logging.critical(
+                logger.critical(
                     "Environment Error: CYCLE_TIME to short ||| Set cycle time is "
                     "shorter than the processing time for each image.")
-                logging.error(f"cycle time: {cycle_time} loop took {loop_time}")
+                logger.error(f"cycle time: {cycle_time} loop took {loop_time}")
                 self.count_error()
 
             else:
@@ -268,5 +269,5 @@ class ContinuousTrigger(BaseTrigger):
                 # time to have a constant cycle time
                 delay = self.cycle_time - loop_time
                 self.errors_since_last_success = 0
-                logging.debug(f"Delay {delay} s to reach constant cycle time.")
+                logger.debug(f"Delay {delay} s to reach constant cycle time.")
                 time.sleep(delay)

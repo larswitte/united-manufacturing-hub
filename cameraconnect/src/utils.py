@@ -53,7 +53,7 @@ def get_logger(application: str, name: str,
         debug = True
     if debug:
         base_level = min(logging.DEBUG, base_level)
-        stdout_level = min(logging.INFO, stdout_level)
+        stdout_level = min((logging.INFO, stdout_level, base_level))
     logger = logging.getLogger(f"{application}/{name}")
     logger.setLevel(base_level)
 
@@ -97,5 +97,30 @@ def get_logger(application: str, name: str,
     if custom_log:
         logger.warning(f"logger is in custom mode with levels base: {base_level} "
                        f"out: {stdout_level} err: {stderr_level}")
+
+    return logger
+
+
+def get_logger_from_env(application, name, log_prefix="") -> logging.Logger:
+    LOGGING_LEVEL = os.environ.get(f'{log_prefix}LOGGING_LEVEL', 'WARNING').upper()
+    if LOGGING_LEVEL == "DEBUG":
+        logger = get_logger(application=application, name=name, base_level=logging.DEBUG,
+                            stdout_level=logging.DEBUG, debug=True)
+    elif LOGGING_LEVEL == "INFO":
+        logger = get_logger(application=application, name=name, base_level=logging.INFO,
+                            stdout_level=logging.INFO)
+    elif LOGGING_LEVEL == "WARNING":
+        logger = get_logger(application=application, name=name, base_level=logging.WARNING,
+                            stdout_level=logging.WARNING)
+    elif LOGGING_LEVEL == "ERROR":
+        logger = get_logger(application=application, name=name, base_level=logging.ERROR,
+                            stdout_level=logging.ERROR)
+    elif LOGGING_LEVEL == "CRITICAL":
+        logger = get_logger(application=application, name=name, base_level=logging.CRITICAL,
+                            stdout_level=logging.DEBUG)
+    else:
+        logger = get_logger(application=application, name=name, base_level=logging.WARNING,
+                            stdout_level=logging.INFO)  # default value, in case you mess the setting up
+        logger.warning(f"log setting invalid, < {LOGGING_LEVEL} > is not a valid log setting")
 
     return logger
