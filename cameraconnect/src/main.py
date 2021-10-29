@@ -41,10 +41,10 @@ CYCLE_TIME = float(os.environ.get('CYCLE_TIME', 10.0))
 CAMERA_INTERFACE = os.environ.get('CAMERA_INTERFACE')
 MAC_ADDRESS = os.environ.get('MAC_ADDRESS', '')
 TRANSMITTER_ID = os.environ.get('CUBE_TRANSMITTERID', '')
+MQTT_ROOT_TOPIC= os.environ.get('MQTT_ROOT_TOPIC',"ia")
 
-MQTT_TOPIC_TRIGGER = "ia/trigger/" + TRANSMITTER_ID + "/" + MAC_ADDRESS  # todo add variable for first part of topic
-MQTT_TOPIC_IMAGE = "ia/rawImage/" + TRANSMITTER_ID + "/" + MAC_ADDRESS  # todo add variable for first part of topic
-
+MQTT_TOPIC_TRIGGER = f"{MQTT_ROOT_TOPIC}/trigger/{TRANSMITTER_ID}/{MAC_ADDRESS}"
+MQTT_TOPIC_IMAGE = f"{MQTT_ROOT_TOPIC}/rawImage/{TRANSMITTER_ID}/{MAC_ADDRESS}"
 # GenICam settings
 DEFAULT_GENTL_PRODUCER_PATH = os.environ.get('DEFAULT_GENTL_PRODUCER_PATH', '/app/assets/producer_files')
 USER_SET_SELECTOR = os.environ.get('USER_SET_SELECTOR', 'Default')
@@ -113,7 +113,7 @@ if __name__ == "__main__":
         # Never jumps out of the processes of the instance
         ContinuousTrigger(cam, CAMERA_INTERFACE, CYCLE_TIME)
     elif TRIGGER == "MQTT":
-        # Starts an asynchroneous process for working with 
+        # Starts an asynchronous process for working with
         #   the received mqtt data
         trigger = MqttTrigger(cam, CAMERA_INTERFACE, ACQUISITION_DELAY, MQTT_HOST, MQTT_PORT, MQTT_TOPIC_TRIGGER)
 
