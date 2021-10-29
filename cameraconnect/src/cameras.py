@@ -100,7 +100,7 @@ class CamGeneral(ABC):
                     'image_bytes': encoded_image,
                     'image_height': image.shape[0],
                     'image_width': image.shape[1],
-                    'image_channels':image.shape[2]},
+                    'image_channels': image.shape[2] | 1},
             }
 
 
@@ -110,7 +110,10 @@ class CamGeneral(ABC):
                                     N x M x image_channels
                                     where N is height, M is width
                                     and image channels the number
-                                    of bytes per pixel
+                                    of bytes per pixel.
+                                    If image_channels is 1 ,
+                                    the last dimension is expected to be dropped.
+                                    resulting in shape N x M
 
         Returns:
             None
@@ -126,6 +129,11 @@ class CamGeneral(ABC):
         im_bytes = im_arr.tobytes()
         encoded_image = base64.b64encode(im_bytes).decode()
         # Preparation of the message that will be published
+        # determine image channels, works for both mono and color
+        if len(image.shape) == 2:
+            channels = 1
+        else:
+            channels = image.shape[2]
         prepared_message = {
             'timestamp_ms': timestamp_ms,
             'image':
@@ -133,7 +141,7 @@ class CamGeneral(ABC):
                  'image_bytes': encoded_image,
                  'image_height': image.shape[0],
                  'image_width': image.shape[1],
-                 'image_channels': image.shape[2]},
+                 'image_channels': channels},
         }
 
         # Get json formatted string, convert python object into
@@ -422,8 +430,8 @@ class GenICam(CamGeneral):
 
             if not first:
                 logging.warning(f"camera {camera} with ident: {camera_identifier} is not first one matching the target "
-                              f"id: {self.mac_address}  |"
-                              f" ident: {object_identifier}, skipping")
+                                f"id: {self.mac_address}  |"
+                                f" ident: {object_identifier}, skipping")
                 continue  # using continue instead of break to preserve debug output
 
             if camera_identifier.find(object_identifier) != -1:
@@ -473,7 +481,7 @@ class GenICam(CamGeneral):
         device = re.compile("(DEVICEMODULE?)|(DEV)")  # removes common pre/suffixes
         no_dev_id = device.sub("", upper_id)
         spacer_symbols = re.compile("[-.:,;_\s]")  # removes variable spacers used on different cameras
-        no_spacer_symbols = spacer_symbols.sub("",no_dev_id)
+        no_spacer_symbols = spacer_symbols.sub("", no_dev_id)
         return no_spacer_symbols
 
     def __remove_duplicate_entry_from_harvester(self):
