@@ -85,6 +85,9 @@ func (r CountHandler) process() {
 			}
 			r.enqueue(faultyItem.Value, prio)
 		}
+		if len(faultyItems) > 0 {
+			time.Sleep(50 * time.Millisecond)
+		}
 	}
 	zap.S().Debugf("[CountHandler/process] r.shutdown=true")
 }

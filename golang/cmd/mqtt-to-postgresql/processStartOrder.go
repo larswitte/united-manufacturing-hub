@@ -80,6 +80,9 @@ func (r StartOrderHandler) process() {
 			}
 			r.enqueue(faultyItem.Value, prio)
 		}
+		if len(faultyItems) > 0 {
+			time.Sleep(50 * time.Millisecond)
+		}
 	}
 }
 

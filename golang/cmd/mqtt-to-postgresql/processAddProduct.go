@@ -85,6 +85,9 @@ func (r AddProductHandler) process() {
 			zap.S().Debugf("Inserting faultyItem: %d", prio, faultyItems)
 			r.enqueue(faultyItem.Value, prio)
 		}
+		if len(faultyItems) > 0 {
+			time.Sleep(50 * time.Millisecond)
+		}
 	}
 }
 
