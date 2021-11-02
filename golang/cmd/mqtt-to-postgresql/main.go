@@ -40,6 +40,8 @@ var valueDataHandler ValueDataHandler
 var valueStringHandler ValueStringHandler
 var storedRawMQTTHandler StoredRawMQTTHandler
 
+var buildtime string
+
 func main() {
 	// Setup logger and set as global
 	var logger *zap.Logger
@@ -64,6 +66,8 @@ func main() {
 	SSLMODE := os.Getenv("POSTGRES_SSLMODE")
 
 	zap.S().Debugf("######################################################################################## Starting program..", PQHost, PQUser, PWDBName)
+
+	zap.S().Infof("This is mqtt-to-postgresql build date: %s", buildtime)
 
 	// Prometheus
 	metricsPath := "/metrics"
@@ -320,4 +324,3 @@ func ShutdownApplicationGraceful() {
 	// (Use runtime.GoExit() if you need to call defers)
 	os.Exit(0)
 }
-
