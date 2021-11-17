@@ -64,13 +64,13 @@ for filename in glob.glob(os.path.join('./iodd_files', '*.xml')):
    with open(filename, 'r') as f: # open in readonly mode
     xmlstring =f.read()
 
-    xmlstring = re.sub(' xmlns="[^"]+"', '', xmlstring, count=1)
+    xmlstring = re.sub(' xmlns="[^"]+"', '', xmlstring, count=1) # replaces xmlns= with just an empty space
     root = ET.fromstring(xmlstring)
 
     # prepare final array
     processDataForDeviceArray = []
 
-    # get device id
+    # get device id (getting deviceId and vendorId value out of the DeviceIdentity part of the IODD's)
     DeviceIdentity = root.find("ProfileBody/DeviceIdentity")
     DeviceIdentityDict = etree_to_dict(DeviceIdentity)
     deviceId=DeviceIdentityDict['DeviceIdentity']['@deviceId']
@@ -97,7 +97,7 @@ for filename in glob.glob(os.path.join('./iodd_files', '*.xml')):
       print(recordItem)
       name = recordItem['Name']['@textId']
       translatedName = translationsDict[name]
-      datatype = recordItem['SimpleDatatype']['@{http://www.w3.org/2001/XMLSchema-instance}type']
+      datatype = recordItem['SimpleDatatype']['@{http://www.w3.org/2001/XMLSchema-instance}type'] # The RecordItems in ProcessData are structured by different datatypes: xsi:type (used to be interpreded)
 
       if (datatype == "BooleanT"):
         length = 1
