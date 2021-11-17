@@ -128,7 +128,7 @@ for filename in glob.glob(os.path.join('./iodd_files', '*.xml')):
     }
 
     deviceDataArray.append(tempdict)
-# getDeviceData returns the device data for a given deviceData array, vendorId and deviceId
+# getDeviceData returns the device data for a given deviceData array (-> put in deviceDataArray), vendorId and deviceId
 def getDeviceData(deviceData, vendorId, deviceId): ##
     if deviceData == None:
         return None
@@ -143,7 +143,7 @@ def getDeviceData(deviceData, vendorId, deviceId): ##
                     return device['content']
     return None
 
-# The callback for when the client receives a CONNACK response from the server.
+# The callback for when the client receives a CONNACK response from the server. (client sends CONNECT message -> server acknowledges with CONNACK message)
 def on_connect(client, userdata, flags, rc):
    print(str(get_timestamp()) + " MQTT Connected")
 
@@ -164,7 +164,7 @@ def startMQTT():
 
     return mqttc
 
-# find ifm devices
+# find ifm devices (or finds ifm gateways??)
 def discoverDevices():
     returnArray = []
     print(str(get_timestamp()) + " Searching for new devices")
@@ -252,14 +252,14 @@ def dataProcessing(data, modeArray, portNumber, mqttc, serialNumber):
                     connected = 1
                     deviceID = data["data"]["/iolinkmaster/port["+str(i)+"]/iolinkdevice/deviceid"]["data"]
                     vendorID = data["data"]["/iolinkmaster/port["+str(i)+"]/iolinkdevice/vendorid"]["data"]
-                    value_string = data["data"]["/iolinkmaster/port["+str(i)+"]/iolinkdevice/pdin"]["data"]
+                    value_string = data["data"]["/iolinkmaster/port["+str(i)+"]/iolinkdevice/pdin"]["data "] # data string interessiert mich !!
 
                     # store values in payload
                     payload = {
-                        "serial_number": serialNumber+"-X0"+str(i),
+                        "serial_number": serialNumber+"-X0"+str(i), # not in sensorconnect docs (datamodel)
                         "timestamp_ms":timestamp_ms,
-                        "type": port_mode,
-                        "connected": connected
+                        "type": port_mode,# not in sensorconnect docs (datamodel)
+                        "connected": connected# not in sensorconnect docs (datamodel)
                     }
 
                     tempVendorId = vendorID
@@ -269,16 +269,17 @@ def dataProcessing(data, modeArray, portNumber, mqttc, serialNumber):
 
                     tempDeviceData = getDeviceData(deviceDataArray,tempVendorId,tempDeviceId)
 
-                    if tempDeviceData == None: #if device is not known
+                    if tempDeviceData == None: #if device is not known add raw tempValueString to payload with key name "value_string"
                             datapointDict = {"value_string": tempValueString}
-                            payload.update(datapointDict)
+                            payload.update(datapointDict) # if key exists -> changes value, if not -> new key value pair
                             # send out result
                             (result, _) = mqttc.publish(mqtt_raw_topic + "/"+str(tempVendorId)+"-"+str(tempDeviceId), payload=json.dumps(payload), qos=1)
                             if (result != 0):
                                 print(str(get_timestamp()) + " [Error in publish] " + str(result))
                             continue
                     else:
-                        tempDeviceData = tempDeviceData[::-1] #no idea what this line does, but tempDeviceData is not allowed to be None
+                        tempDeviceData = tempDeviceData[::-1] #no idea what this line does, but tempDeviceData is not allowed to be None (with arrays [::-1] should repeat elements the other way around,
+                        #all contens (previously filtered by vendorID and deviceId are turned around... why???))
 
                     try:
                         scale = 16
