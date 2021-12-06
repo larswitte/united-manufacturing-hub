@@ -53,13 +53,24 @@ type ProcessDataIn struct {
 }
 
 type Datatype struct {
-	Type        string     `xml:"xsi:type,attr"`
 	Bitlength   string     `xml:"bitLength,attr"`
 	ReccordItem RecordItem `xml:"RecordItem"`
 }
 
 type RecordItem struct {
-	Name string `xml:"textId,attr`
+	BitOffset      int            `xml:"bitOffset,attr"`
+	SimpleDatatype SimpleDatatype `xml:"SimpleDatatype"`
+	Name           Name           `xml:"Name"`
+}
+
+type Name struct {
+	TextId string `xml:"textId"`
+}
+
+type SimpleDatatype struct {
+	Type        string `xml:"xsi:type,attr"` //ToDo how to unmarshal xsi:...
+	BitLength   int    `xml:"bitLength,attr"`
+	FixedLength int    `xml:"fixedLength,attr"`
 }
 
 func main() {
