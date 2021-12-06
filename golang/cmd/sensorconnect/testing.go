@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
+	"reflect" //for reading out type of variable
 )
 
 type IODevice struct {
@@ -18,9 +19,9 @@ type ProfileBody struct {
 
 // DeviceIdentity : IODevice>ProfileBody>DeviceIdentity
 type DeviceIdentity struct {
-	VendorId   string `xml:"vendorId,attr"` // not used
+	VendorId   int    `xml:"vendorId,attr"` // not used
 	VendorName string `xml:"vendorName,attr"`
-	DeviceId   string `xml:"deviceId,attr"` // id of type of device, given by device vendor
+	DeviceId   int    `xml:"deviceId,attr"` // id of type of device, given by device vendor
 }
 
 type ExternalTextCollection struct {
@@ -53,8 +54,8 @@ type ProcessDataIn struct {
 }
 
 type Datatype struct {
-	Bitlength   string     `xml:"bitLength,attr"`
-	ReccordItem RecordItem `xml:"RecordItem"`
+	BitLength   int          `xml:"bitLength,attr"`
+	ReccordItem []RecordItem `xml:"RecordItem"`
 }
 
 type RecordItem struct {
@@ -108,8 +109,13 @@ func main() {
 	   				...
 	   			}
 	   	} */
-
+	//should give out 698 and int
 	fmt.Println(payload.ProfileBody.DeviceIdentity.DeviceId)
+	fmt.Println(reflect.TypeOf(payload.ProfileBody.DeviceIdentity.DeviceId))
+
+	//should put out 4 and int
+	fmt.Println(payload.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.BitLength)
+	fmt.Println(reflect.TypeOf(payload.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.BitLength))
 }
 
 func check(e error) {
