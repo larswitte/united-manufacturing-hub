@@ -29,6 +29,17 @@ type ProcessData struct {
 	
 }
 
+// ProcessDataInDatatype : IODevice>ProfileBody>DeviceFunction>ProcessDataCollection>ProcessData
+type ProcessDataInDatatype struct {
+	BitLength int `xml:"bitLength,attr"`
+	RecordItems RecordItems `xml:"Datatype"`
+}
+
+type RecordItems []struct {
+	PrimaryName string `xml:"textId"`
+	Datatype string `xml:`
+}
+
 type IoddInformationOfOneVendor struct {
 	vendorId string
 	devicesOfVendor []Device

@@ -18,28 +18,9 @@ import (
 	"go.uber.org/zap"
 )
 
-var addOrderHandler AddOrderHandler
-var addParentToChildHandler AddParentToChildHandler
-var addProductHandler AddProductHandler
-var addShiftHandler AddShiftHandler
-var countHandler CountHandler
-var deleteShiftByAssetIdAndBeginTimestampHandler DeleteShiftByAssetIdAndBeginTimestampHandler
-var deleteShiftByIdHandler DeleteShiftByIdHandler
-var endOrderHandler EndOrderHandler
-var maintenanceActivityHandler MaintenanceActivityHandler
-var modifyProducedPieceHandler ModifyProducedPieceHandler
-var modifyStateHandler ModifyStateHandler
-var productTagHandler ProductTagHandler
-var recommendationDataHandler RecommendationDataHandler
-var scrapCountHandler ScrapCountHandler
-var scrapUniqueProductHandler ScrapUniqueProductHandler
-var startOrderHandler StartOrderHandler
-var productTagStringHandler ProductTagStringHandler
-var stateHandler StateHandler
-var uniqueProductHandler UniqueProductHandler
-var valueDataHandler ValueDataHandler
-var valueStringHandler ValueStringHandler
-var storedRawMQTTHandler StoredRawMQTTHandler
+var ipAddressesOfIoLinkMasters []int
+var allSensorsOnAllIoLinkMasters []struct
+var sensorInformationFromIoddFiles []struct
 
 var DebugMode = false
 
@@ -47,24 +28,22 @@ var buildtime string
 
 func main() {
 	// Setup logger and set as global
-	var logger *zap.Logger
-	if os.Getenv("LOGGING_LEVEL") == "DEVELOPMENT" {
-		DebugMode = true
-		logger, _ = zap.NewDevelopment()
-	} else {
-
-		logger, _ = zap.NewProduction()
-	}
+	logger, _ := zap.NewDevelopment()
 	zap.ReplaceGlobals(logger)
 	defer logger.Sync()
 
-	// Read environment variables
-	certificateName := os.Getenv("CERTIFICATE_NAME")
-	mqttBrokerURL := os.Getenv("BROKER_URL")
+	zap.S().Infof("This is sensorconnect build date: %s", buildtime)
 
-	PQHost := os.Getenv("POSTGRES_HOST")
-	PQPort := 5432
-	PQUser := os.Getenv("POSTGRES_USER")
-	PQPassword := os.Getenv("POSTGRES_PASSWORD")
-	PWDBName := os.Getenv("POSTGRES_DATABASE")
-	SSLMODE := os.Getenv("POSTGRES_SSLMODE")
+	// Read environment variables for MQTT
+	MQTTCertificateName := os.Getenv("MQTT_CERTIFICATE_NAME")
+	MQTTBrokerURL := os.Getenv("MQTT_BROKER_URL")
+	MQTTTopic := os.Getenv("MQTT_TOPIC")
+	MQTTBrokerSSLEnabled, err := strconv.ParseBool(os.Getenv("MQTT_BROKER_SSL_ENABLED"))
+	if err != nil {
+		zap.S().Errorf("Error parsing bool from environment variable", err)
+		return
+	}
+
+	// Read environment varialbes for IO-Link
+	IOLinkMasterIpRange := os.Getenv("IP_RANGE_IO_LINK_MASTER")
+	
