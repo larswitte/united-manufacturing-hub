@@ -13,12 +13,16 @@ import (
 
 // DeviceIdentity : IODevice>ProfileBody>DeviceIdentity
 type DeviceIdentity struct {
-	VendorId int `xml:"vendorId,attr"`
+	VendorId int `xml:"vendorId,attr"` // not used
 	VendorName string `xml:"vendorName,attr"`
 	DeviceId int `xml:"deviceId,attr"` // id of type of device, given by device vendor
 }
 
-
+// Translation : IODevice>ExternalTextCollection>PrimaryLanguage>Text
+type Translations []struct {
+	PrimayName string `xml: "id,attr"`
+	Translation string `xml: value,attr"`
+}
 
 // ProcessData : IODevice>ProfileBody>DeviceFunction>ProcessDataCollection>ProcessData
 type ProcessData struct {
