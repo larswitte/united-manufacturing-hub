@@ -5,8 +5,8 @@ import (
 )
 
 type IoDevice struct {
-	ProfileBody            ProfileBody `xml:"ProfileBody"`
-	ExternalTextCollection `xml:"ExternalTextCollection"`
+	ProfileBody            ProfileBody            `xml:"ProfileBody"`
+	ExternalTextCollection ExternalTextCollection `xml:"ExternalTextCollection"`
 }
 
 type ProfileBody struct {
@@ -20,7 +20,7 @@ type DeviceIdentity struct {
 }
 
 type ExternalTextCollection struct {
-	PrimaryLanguage PrimaryLanguage `xml:"ExternalTextCollection"`
+	PrimaryLanguage PrimaryLanguage `xml:"PrimaryLanguage"`
 }
 
 type PrimaryLanguage struct {

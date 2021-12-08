@@ -32,6 +32,39 @@ func TestUnmarshalIoddFile(t *testing.T) {
 		t.Error()
 	}
 
+	//VendorName: should give out "ifm electronic gmbh"
+	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceIdentity.VendorName, "ifm electronic gmbh") {
+		t.Error()
+	}
+	//VendorName: type should be string
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceIdentity.VendorName).Kind(), reflect.String) {
+		t.Error()
+	}
+
+	//Check correct length of Text[] in ExternalTextCollection>PrimaryLanguage
+	if !reflect.DeepEqual(len(ioDevice.ExternalTextCollection.PrimaryLanguage.Text), 177) {
+		fmt.Println(len(ioDevice.ExternalTextCollection.PrimaryLanguage.Text))
+		fmt.Println(ioDevice.ExternalTextCollection)
+		t.Error()
+	}
+	//Id: should give out "TI_ProductName0"
+	if !reflect.DeepEqual(ioDevice.ExternalTextCollection.PrimaryLanguage.Text[0].Id, "TI_ProductName0") {
+		t.Error()
+	}
+	//Id: type should be string
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ExternalTextCollection.PrimaryLanguage.Text[0].Id).Kind(), reflect.String) {
+		t.Error()
+	}
+
+	//Value: should give out "UGR500"
+	if !reflect.DeepEqual(ioDevice.ExternalTextCollection.PrimaryLanguage.Text[0].Value, "UGR500") {
+		t.Error()
+	}
+	//Value: type should be string
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ExternalTextCollection.PrimaryLanguage.Text[0].Value).Kind(), reflect.String) {
+		t.Error()
+	}
+
 	//BitLength (of SimpleDatatype): should be 4 here
 	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.BitLength, 4) {
 		t.Error()
@@ -56,6 +89,15 @@ func TestUnmarshalIoddFile(t *testing.T) {
 	}
 	//TextId (of RecordItem>Name): should be string
 	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].Name.TextId).Kind(), reflect.String) {
+		t.Error()
+	}
+
+	//BitOffset (of RecordItem): should be 4
+	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].BitOffset, 4) {
+		t.Error()
+	}
+	//BitOffset (of RecordItem): should be int
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].BitOffset).Kind(), reflect.Int) {
 		t.Error()
 	}
 
