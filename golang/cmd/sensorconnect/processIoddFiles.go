@@ -16,7 +16,7 @@ type ProfileBody struct {
 
 type DeviceIdentity struct {
 	VendorName string `xml:"vendorName,attr"`
-	DeviceId   int    `xml:"deviceId,attr"` // id of type of device, given by device vendor
+	DeviceId   int    `xml:"deviceId,attr"` // Id of type of a device, given by device vendor
 }
 
 type ExternalTextCollection struct {
@@ -60,11 +60,11 @@ type RecordItem struct {
 }
 
 type Name struct {
-	TextId string `xml:"textId"`
+	TextId string `xml:"textId,attr"`
 }
 
 type SimpleDatatype struct {
-	Type        string `xml:"type,attr"` //ToDo how to unmarshal xsi:...
+	Type        string `xml:"type,attr"` // Dropped "xsi:" to correctly unmarshal
 	BitLength   int    `xml:"bitLength,attr"`
 	FixedLength int    `xml:"fixedLength,attr"`
 }

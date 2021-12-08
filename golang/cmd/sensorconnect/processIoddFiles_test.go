@@ -13,7 +13,7 @@ func TestUnmarshalIoddFile(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	//fmt.Println("Contents of file:", string(dat))
+	fmt.Println("Contents of file:", string(dat))
 
 	// Unmarshal file
 	var ioDevice IoDevice
@@ -49,4 +49,14 @@ func TestUnmarshalIoddFile(t *testing.T) {
 	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.Type).Kind(), reflect.String) {
 		t.Error()
 	}
+
+	//TextId (of RecordItem>Name): should be TI_PD_SV_2_Name
+	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].Name.TextId, "TI_PD_SV_2_Name") {
+		t.Error()
+	}
+	//TextId (of RecordItem>Name): should be string
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].Name.TextId).Kind(), reflect.String) {
+		t.Error()
+	}
+	fmt.Println(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].Name.TextId)
 }
