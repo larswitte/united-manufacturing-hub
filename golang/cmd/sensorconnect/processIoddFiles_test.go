@@ -13,7 +13,7 @@ func TestUnmarshalIoddFile(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Contents of file:", string(dat))
+	//fmt.Println("Contents of file:", string(dat))
 
 	// Unmarshal file
 	var ioDevice IoDevice
@@ -38,6 +38,15 @@ func TestUnmarshalIoddFile(t *testing.T) {
 	}
 	//BitLength (of SimpleDatatype): type should be int
 	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.BitLength).Kind(), reflect.Int) {
+		t.Error()
+	}
+
+	//xsi:type (of SimpleDatatype): should be UIntegerT
+	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.Type, "UIntegerT") {
+		t.Error()
+	}
+	//xsi:type (of SimpleDatatype): should be string
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.Type).Kind(), reflect.String) {
 		t.Error()
 	}
 }

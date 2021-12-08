@@ -64,7 +64,7 @@ type Name struct {
 }
 
 type SimpleDatatype struct {
-	Type        string `xml:"xsi:type,attr"` //ToDo how to unmarshal xsi:...
+	Type        string `xml:"type,attr"` //ToDo how to unmarshal xsi:...
 	BitLength   int    `xml:"bitLength,attr"`
 	FixedLength int    `xml:"fixedLength,attr"`
 }
