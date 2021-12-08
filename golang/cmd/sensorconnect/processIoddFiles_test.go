@@ -23,18 +23,21 @@ func TestUnmarshalIoddFile(t *testing.T) {
 		t.Error()
 	}
 
-	//should give out 698 and int
+	//DeviceId: should give out 698
 	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceIdentity.DeviceId, 698) {
 		t.Error()
 	}
-
-	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceIdentity.DeviceId), "int") {
+	//DeviceId: type should be int
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceIdentity.DeviceId).Kind(), reflect.Int) {
 		t.Error()
 	}
 
-	//should put out 4 and int
-	fmt.Println(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.BitLength)
-	fmt.Println(reflect.TypeOf(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.BitLength))
-	fmt.Println(reflect.TypeOf(dat))
-
+	//BitLength (of SimpleDatatype): should be 4 here
+	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.BitLength, 4) {
+		t.Error()
+	}
+	//BitLength (of SimpleDatatype): type should be int
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.BitLength).Kind(), reflect.Int) {
+		t.Error()
+	}
 }
