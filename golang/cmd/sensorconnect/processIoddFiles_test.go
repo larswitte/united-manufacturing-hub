@@ -3,13 +3,15 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 	"reflect" //for reading out type of variable
 	"testing"
 )
 
 func TestUnmarshalIoddFile_ifm(t *testing.T) {
 	//Read File
-	dat, err := ioutil.ReadFile("C:/Users/LarsWitte/umh_larswitte_repo/sensorconnectRep/united-manufacturing-hub/golang/cmd/sensorconnect/ifm-0002BA-20170227-IODD1.1.xml")
+	absolutePath, _ := filepath.Abs("../sensorconnect/ifm-0002BA-20170227-IODD1.1.xml")
+	dat, err := ioutil.ReadFile(absolutePath)
 	if err != nil {
 		panic(err)
 	}
@@ -116,7 +118,8 @@ func TestUnmarshalIoddFile_ifm(t *testing.T) {
 
 func TestUnmarshalIoddFile_rexroth(t *testing.T) {
 	//Read File
-	dat, err := ioutil.ReadFile("C:/Users/LarsWitte/umh_larswitte_repo/sensorconnectRep/united-manufacturing-hub/golang/cmd/sensorconnect/BoschRexroth-4WRPEH10-3X-20191011-IODD1.1.xml")
+	absolutePath, _ := filepath.Abs("../sensorconnect/BoschRexroth-4WRPEH10-3X-20191011-IODD1.1.xml")
+	dat, err := ioutil.ReadFile(absolutePath)
 	if err != nil {
 		panic(err)
 	}
