@@ -223,3 +223,111 @@ func TestUnmarshalIoddFile_rexroth(t *testing.T) {
 		t.Error()
 	}
 }
+
+func TestUnmarshalIoddFile_siemens(t *testing.T) {
+	//Read File
+	//absolutePath, _ := filepath.Abs("..sensorconnect/Siemens-SIRIUS-3SU1-4DI4DQ-20160602-IODD1.1.xml")
+	dat, err := ioutil.ReadFile("C:/Users/LarsWitte/umh_larswitte_repo/sensorconnectRep/united-manufacturing-hub/golang/cmd/sensorconnect/Siemens-SIRIUS-3SU1-4DI4DQ-20160602-IODD1.1.xml")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Contents of file:", string(dat))
+
+	// Unmarshal file
+	var ioDevice IoDevice
+	ioDevice, err = UnmarshalIoddFile(dat)
+	if err != nil {
+		fmt.Println(err)
+		t.Error()
+	}
+
+	//DeviceId: should give out 278531
+	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceIdentity.DeviceId, 278531) {
+		t.Error()
+	}
+	//DeviceId: type should be int
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceIdentity.DeviceId).Kind(), reflect.Int) {
+		t.Error()
+	}
+
+	//VendorName: should give out "Siemens AG"
+	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceIdentity.VendorName, "Siemens AG") {
+		t.Error()
+	}
+	//VendorName: type should be string
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceIdentity.VendorName).Kind(), reflect.String) {
+		t.Error()
+	}
+
+	//Check correct length of Text[] in ExternalTextCollection>PrimaryLanguage
+	if !reflect.DeepEqual(len(ioDevice.ExternalTextCollection.PrimaryLanguage.Text), 137) {
+		t.Error()
+	}
+	//Id: should give out "TI_VendorText"
+	if !reflect.DeepEqual(ioDevice.ExternalTextCollection.PrimaryLanguage.Text[0].Id, "TI_VendorText") {
+		t.Error()
+	}
+	//Id: type should be string
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ExternalTextCollection.PrimaryLanguage.Text[0].Id).Kind(), reflect.String) {
+		t.Error()
+	}
+
+	//Value: should give out "Siemens AG"
+	if !reflect.DeepEqual(ioDevice.ExternalTextCollection.PrimaryLanguage.Text[0].Value, "Siemens AG") {
+		t.Error()
+	}
+	//Value: type should be string
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ExternalTextCollection.PrimaryLanguage.Text[0].Value).Kind(), reflect.String) {
+		t.Error()
+	}
+
+	//bitLength (Datatype): should give out 16
+	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.BitLength, 16) {
+		t.Error()
+	}
+	//bitLength (Datatype): should be int
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.BitLength).Kind(), reflect.Int) {
+		t.Error()
+	}
+
+	//BitLength (of SimpleDatatype): should be 0 here (zero because not given/specified in IODD file)
+	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.BitLength, 0) {
+		t.Error()
+	}
+	//BitLength (of SimpleDatatype): type should be int
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.BitLength).Kind(), reflect.Int) {
+		t.Error()
+	}
+
+	//xsi:type (of SimpleDatatype): should be "" (because of different structure: without SimpleDatatype)
+	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.Type, "") {
+		t.Error()
+	}
+	//xsi:type (of SimpleDatatype): should be string
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].SimpleDatatype.Type).Kind(), reflect.String) {
+		t.Error()
+	}
+
+	//TextId (of RecordItem>Name): should be TI_PaeError
+	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].Name.TextId, "TI_PaeError") {
+		t.Error()
+	}
+	//TextId (of RecordItem>Name): should be string
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].Name.TextId).Kind(), reflect.String) {
+		t.Error()
+	}
+
+	//BitOffset (of RecordItem): should be 9
+	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].BitOffset, 9) {
+		t.Error()
+	}
+	//BitOffset (of RecordItem): should be int
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem[1].BitOffset).Kind(), reflect.Int) {
+		t.Error()
+	}
+
+	//Check correct length of RecordItem[] in Datatype
+	if !reflect.DeepEqual(len(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.ReccordItem), 16) {
+		t.Error()
+	}
+}
