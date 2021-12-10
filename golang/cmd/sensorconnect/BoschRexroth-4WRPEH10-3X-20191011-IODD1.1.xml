@@ -1,0 +1,754 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<IODevice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.io-link.com/IODD/2010/10" xsi:schemaLocation="http://www.io-link.com/IODD/2010/10 IODD1.1.xsd">
+  <DocumentInfo copyright="Bosch Rexroth AG" releaseDate="2019-10-11" version="V1.35" />
+  <ProfileHeader>
+    <ProfileIdentification>IO Device Profile</ProfileIdentification>
+    <ProfileRevision>1.1</ProfileRevision>
+    <ProfileName>Device Profile for IO Devices</ProfileName>
+    <ProfileSource>IO-Link Consortium</ProfileSource>
+    <ProfileClassID>Device</ProfileClassID>
+    <ISO15745Reference>
+      <ISO15745Part>1</ISO15745Part>
+      <ISO15745Edition>1</ISO15745Edition>
+      <ProfileTechnology>IODD</ProfileTechnology>
+    </ISO15745Reference>
+  </ProfileHeader>
+  <ProfileBody>
+    <DeviceIdentity vendorId="287" vendorName="Bosch_Rexroth_AG" deviceId="2228227">
+      <VendorText textId="TI_VendorText" />
+      <VendorUrl textId="TI_VendorUrl" />
+      <VendorLogo name="BoschRexroth-logo.png" />
+      <DeviceName textId="TI_Device_Name" />
+      <DeviceFamily textId="TI_DeviceFamily" />
+      <DeviceVariantCollection>
+        <DeviceVariant productId="R0000000" deviceIcon="BoschRexroth-4WRPEH10-3X-icon-icon.png" deviceSymbol="BoschRexroth-4WRPEH10-3X-pic-pic.png">
+          <Name textId="TI_Device_R0000000_Name" />
+          <Description textId="TI_Device_R0000000_Description" />
+        </DeviceVariant>
+      </DeviceVariantCollection>
+    </DeviceIdentity>
+    <DeviceFunction>
+      <Features blockParameter="true" dataStorage="true" profileCharacteristic="16384">
+        <SupportedAccessLocks parameter="false" dataStorage="true" localParameterization="false" localUserInterface="false" />
+      </Features>
+      <DatatypeCollection>
+        <Datatype id="D_ErrorFlagsStored" xsi:type="RecordT" bitLength="8" subindexAccessSupported="false">
+          <RecordItem subindex="1" bitOffset="0">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name5287CollectiveFault" />
+          </RecordItem>
+          <RecordItem subindex="2" bitOffset="1">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name420124VError" />
+          </RecordItem>
+          <RecordItem subindex="3" bitOffset="2">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name4469ValveError" />
+          </RecordItem>
+          <RecordItem subindex="4" bitOffset="3">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name3934InternalError" />
+          </RecordItem>
+          <RecordItem subindex="5" bitOffset="4">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name2853Reserved" />
+          </RecordItem>
+          <RecordItem subindex="6" bitOffset="5">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name2853Reserved" />
+          </RecordItem>
+          <RecordItem subindex="7" bitOffset="6">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name2853Reserved" />
+          </RecordItem>
+          <RecordItem subindex="8" bitOffset="7">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name7387IOLerror" />
+          </RecordItem>
+        </Datatype>
+        <Datatype id="D_ErrorFlagsCurrent" xsi:type="RecordT" bitLength="8" subindexAccessSupported="false">
+          <RecordItem subindex="1" bitOffset="0">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name2853Reserved" />
+          </RecordItem>
+          <RecordItem subindex="2" bitOffset="1">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name420124VError" />
+          </RecordItem>
+          <RecordItem subindex="3" bitOffset="2">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name4469ValveError" />
+          </RecordItem>
+          <RecordItem subindex="4" bitOffset="3">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name3934InternalError" />
+          </RecordItem>
+          <RecordItem subindex="5" bitOffset="4">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name2853Reserved" />
+          </RecordItem>
+          <RecordItem subindex="6" bitOffset="5">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name2853Reserved" />
+          </RecordItem>
+          <RecordItem subindex="7" bitOffset="6">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name2853Reserved" />
+          </RecordItem>
+          <RecordItem subindex="8" bitOffset="7">
+            <SimpleDatatype xsi:type="BooleanT" />
+            <Name textId="DT_RI_Name7387IOLerror" />
+          </RecordItem>
+        </Datatype>
+        <Datatype id="D_CustomerParameterProperties" xsi:type="RecordT" bitLength="96">
+          <RecordItem subindex="1" bitOffset="64" accessRightRestriction="ro">
+            <SimpleDatatype xsi:type="IntegerT" bitLength="32" />
+            <Name textId="DT_RI_Name9214Minimum" />
+          </RecordItem>
+          <RecordItem subindex="2" bitOffset="32" accessRightRestriction="ro">
+            <SimpleDatatype xsi:type="IntegerT" bitLength="32" />
+            <Name textId="DT_RI_Name7624Maximum" />
+          </RecordItem>
+          <RecordItem subindex="3" bitOffset="0" accessRightRestriction="ro">
+            <SimpleDatatype xsi:type="IntegerT" bitLength="32" />
+            <Name textId="DT_RI_Name7053Default" />
+          </RecordItem>
+        </Datatype>
+      </DatatypeCollection>
+      <VariableCollection>
+        <StdVariableRef id="V_DirectParameters_1" />
+        <StdVariableRef id="V_DirectParameters_2" />
+        <StdVariableRef id="V_SystemCommand">
+          <StdSingleValueRef value="130" />
+          <SingleValue value="160">
+            <Name textId="Std_V_609747" />
+          </SingleValue>
+          <SingleValue value="161">
+            <Name textId="Std_V_741467" />
+          </SingleValue>
+        </StdVariableRef>
+        <StdVariableRef id="V_DeviceAccessLocks" excludedFromDataStorage="true">
+          <StdRecordItemRef subindex="2" defaultValue="0" />
+        </StdVariableRef>
+        <StdVariableRef id="V_VendorName" defaultValue="Bosch Rexroth" fixedLengthRestriction="64" />
+        <StdVariableRef id="V_VendorText" defaultValue="www.boschrexroth.com" fixedLengthRestriction="64" />
+        <StdVariableRef id="V_ProductName" fixedLengthRestriction="64" />
+        <StdVariableRef id="V_ProductID" fixedLengthRestriction="64" />
+        <StdVariableRef id="V_ProductText" fixedLengthRestriction="64" />
+        <StdVariableRef id="V_SerialNumber" fixedLengthRestriction="16" />
+        <StdVariableRef id="V_HardwareRevision" fixedLengthRestriction="64" />
+        <StdVariableRef id="V_FirmwareRevision" fixedLengthRestriction="64" />
+        <StdVariableRef id="V_ApplicationSpecificTag" defaultValue="***" fixedLengthRestriction="32" excludedFromDataStorage="false" />
+        <StdVariableRef id="V_ErrorCount" defaultValue="0" />
+        <StdVariableRef id="V_DeviceStatus" />
+        <StdVariableRef id="V_DetailedDeviceStatus" fixedLengthRestriction="1" />
+        <Variable id="V_PDInputDescriptor" accessRights="ro" index="14">
+          <Datatype xsi:type="ArrayT" subindexAccessSupported="false" count="2">
+            <SimpleDatatype fixedLength="3" xsi:type="OctetStringT" />
+          </Datatype>
+          <Name textId="TI_V_N_ProcessDataInputDescriptor" />
+        </Variable>
+        <Variable id="V_PDOutputDescriptor" accessRights="ro" index="15">
+          <Datatype xsi:type="ArrayT" subindexAccessSupported="false" count="2">
+            <SimpleDatatype fixedLength="3" xsi:type="OctetStringT" />
+          </Datatype>
+          <Name textId="TI_V_N_ProcessDataOutputDescriptor" />
+        </Variable>
+        <Variable id="V_FunctionTag" accessRights="rw" index="25" defaultValue="***">
+          <Datatype xsi:type="StringT" fixedLength="32" encoding="UTF-8" />
+          <Name textId="TI_V_N_FunctionTag" />
+        </Variable>
+        <Variable id="V_LocationTag" accessRights="rw" index="26" defaultValue="***">
+          <Datatype xsi:type="StringT" fixedLength="32" encoding="UTF-8" />
+          <Name textId="TI_V_N_LocationTag" />
+        </Variable>
+        <Variable id="V_WarningFlags" accessRights="ro" index="64">
+          <Datatype xsi:type="RecordT" bitLength="8" subindexAccessSupported="false">
+            <RecordItem subindex="1" bitOffset="0">
+              <SimpleDatatype xsi:type="BooleanT" />
+              <Name textId="DT_RI_Name2367OvertemperatureFlag" />
+            </RecordItem>
+          </Datatype>
+          <Name textId="V_N_WarningFlags" />
+        </Variable>
+        <Variable id="V_OperatingTime" accessRights="ro" dynamic="true" index="65">
+          <Datatype xsi:type="UIntegerT" bitLength="32" />
+          <Name textId="V_N_OperatingTime" />
+        </Variable>
+        <Variable id="V_ErrorFlagsStored" accessRights="ro" dynamic="true" index="66">
+          <DatatypeRef datatypeId="D_ErrorFlagsStored" />
+          <Name textId="V_N_ErrorFlagsStored" />
+        </Variable>
+        <Variable id="V_ErrorFlagsCurrent" accessRights="ro" dynamic="true" index="67">
+          <DatatypeRef datatypeId="D_ErrorFlagsCurrent" />
+          <Name textId="V_N_ErrorFlagsCurrent" />
+        </Variable>
+        <Variable id="V_TimeBelowTemperature1" accessRights="ro" dynamic="true" index="70">
+          <Datatype xsi:type="UIntegerT" bitLength="32" />
+          <Name textId="V_N_TimebelowTemperature1" />
+        </Variable>
+        <Variable id="V_TimeAboveTemperature2" accessRights="ro" dynamic="true" index="71">
+          <Datatype xsi:type="UIntegerT" bitLength="32" />
+          <Name textId="V_N_TimeaboveTemperature2" />
+        </Variable>
+        <Variable id="V_TimeAboveTemperature3" accessRights="ro" dynamic="true" index="72">
+          <Datatype xsi:type="UIntegerT" bitLength="32" />
+          <Name textId="V_N_TimeaboveTemperature3" />
+        </Variable>
+        <Variable id="V_CurrentTemperature" accessRights="ro" dynamic="true" index="150">
+          <Datatype xsi:type="IntegerT" bitLength="16" />
+          <Name textId="TI_V_N_CurrentTemperature" />
+        </Variable>
+        <Variable id="V_ChangeCurstomerPassword" accessRights="wo" index="199">
+          <Datatype xsi:type="StringT" fixedLength="16" encoding="UTF-8" />
+          <Name textId="TI_V_N_ChangeCustomerPassword" />
+        </Variable>
+        <Variable id="V_CustomerPassword" accessRights="wo" index="200">
+          <Datatype xsi:type="StringT" fixedLength="16" encoding="UTF-8" />
+          <Name textId="TI_V_N_CustomerPassword" />
+        </Variable>
+        <Variable id="V_CustomerParameter01" accessRights="rw" index="201">
+          <Datatype xsi:type="IntegerT" bitLength="32">
+            <ValueRange lowerValue="-2976" upperValue="2976" />
+          </Datatype>
+          <Name textId="TI_V_N_Offset" />
+        </Variable>
+        <Variable id="V_CustomerParameter02" accessRights="rw" index="202">
+          <Datatype xsi:type="IntegerT" bitLength="32">
+            <ValueRange lowerValue="0" upperValue="32000" />
+          </Datatype>
+          <Name textId="TI_V_N_RampSlope1" />
+        </Variable>
+        <Variable id="V_CustomerParameter03" accessRights="rw" index="203">
+          <Datatype xsi:type="IntegerT" bitLength="32">
+            <ValueRange lowerValue="0" upperValue="32000" />
+          </Datatype>
+          <Name textId="TI_V_N_RampSlope2" />
+        </Variable>
+        <Variable id="V_CustomerParameter04" accessRights="rw" index="204">
+          <Datatype xsi:type="IntegerT" bitLength="32">
+            <ValueRange lowerValue="0" upperValue="32000" />
+          </Datatype>
+          <Name textId="TI_V_N_RampSlope3" />
+        </Variable>
+        <Variable id="V_CustomerParameter05" accessRights="rw" index="205">
+          <Datatype xsi:type="IntegerT" bitLength="32">
+            <ValueRange lowerValue="0" upperValue="32000" />
+          </Datatype>
+          <Name textId="TI_V_N_RampSlope4" />
+        </Variable>
+        <Variable id="V_CustomerParameter06" accessRights="ro" index="206">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_OverlapcompensationON" />
+        </Variable>
+        <Variable id="V_CustomerParameter07" accessRights="ro" index="207">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_CustomerParameter07" />
+        </Variable>
+        <Variable id="V_CustomerParameter08" accessRights="ro" index="208">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_CustomerParameter08" />
+        </Variable>
+        <Variable id="V_CustomerParameter09" accessRights="ro" index="209">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_CustomerParameter09" />
+        </Variable>
+        <Variable id="V_CustomerParameter10" accessRights="ro" index="210">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_CustomerParameter10" />
+        </Variable>
+        <Variable id="V_CustomerParameter11" accessRights="ro" index="211">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_CustomerParameter11" />
+        </Variable>
+        <Variable id="V_CustomerParameter12" accessRights="ro" index="212">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_CustomerParameter12" />
+        </Variable>
+        <Variable id="V_CustomerParameter13" accessRights="ro" index="213">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_CustomerParameter13" />
+        </Variable>
+        <Variable id="V_CustomerParameter14" accessRights="ro" index="214">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_CustomerParameter14" />
+        </Variable>
+        <Variable id="V_CustomerParameter15" accessRights="ro" index="215">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_CustomerParameter15" />
+        </Variable>
+        <Variable id="V_CustomerParameter16" accessRights="ro" index="216">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_CustomerParameter16" />
+        </Variable>
+        <Variable id="V_CustomerParameter17" accessRights="ro" index="217">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_CustomerParameter17" />
+        </Variable>
+        <Variable id="V_CustomerParameter18" accessRights="ro" index="218">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_CustomerParameter18" />
+        </Variable>
+        <Variable id="V_CustomerParameter19" accessRights="ro" index="219">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_CustomerParameter19" />
+        </Variable>
+        <Variable id="V_CustomerParameter20" accessRights="ro" index="220">
+          <Datatype xsi:type="IntegerT" bitLength="32" />
+          <Name textId="V_N_CustomerParameter20" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties01" accessRights="ro" index="221">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2976" />
+          <RecordItemInfo subindex="2" defaultValue="2976" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties01" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties02" accessRights="ro" index="222">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="0" />
+          <RecordItemInfo subindex="2" defaultValue="32000" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties02" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties03" accessRights="ro" index="223">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="0" />
+          <RecordItemInfo subindex="2" defaultValue="32000" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties03" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties04" accessRights="ro" index="224">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="0" />
+          <RecordItemInfo subindex="2" defaultValue="32000" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties04" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties05" accessRights="ro" index="225">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="0" />
+          <RecordItemInfo subindex="2" defaultValue="32000" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties05" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties06" accessRights="ro" index="226">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties06" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties07" accessRights="ro" index="227">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties07" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties08" accessRights="ro" index="228">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties08" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties09" accessRights="ro" index="229">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties09" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties10" accessRights="ro" index="230">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties10" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties11" accessRights="ro" index="231">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties11" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties12" accessRights="ro" index="232">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties12" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties13" accessRights="ro" index="233">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties13" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties14" accessRights="ro" index="234">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties14" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties15" accessRights="ro" index="235">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties15" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties16" accessRights="ro" index="236">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties16" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties17" accessRights="ro" index="237">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties17" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties18" accessRights="ro" index="238">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties18" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties19" accessRights="ro" index="239">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties19" />
+        </Variable>
+        <Variable id="V_CustomerParameterProperties20" accessRights="ro" index="240">
+          <DatatypeRef datatypeId="D_CustomerParameterProperties" />
+          <RecordItemInfo subindex="1" defaultValue="-2147483648" />
+          <RecordItemInfo subindex="2" defaultValue="2147483647" />
+          <RecordItemInfo subindex="3" defaultValue="0" />
+          <Name textId="TI_V_N_CustomerParameterProperties20" />
+        </Variable>
+        <Variable id="V_TestParamOneByte" accessRights="rw" index="253" excludedFromDataStorage="true">
+          <Datatype xsi:type="UIntegerT" bitLength="8" />
+          <Name textId="TI_V_N_TestParamOneByte" />
+        </Variable>
+        <Variable id="V_TestParameter" accessRights="rw" index="16382" excludedFromDataStorage="true">
+          <Datatype xsi:type="UIntegerT" bitLength="8" />
+          <Name textId="TI_V_N_TestParameter" />
+        </Variable>
+      </VariableCollection>
+      <ProcessDataCollection>
+        <ProcessData id="PD_DATA">
+          <ProcessDataIn id="PD_IN" bitLength="16">
+            <Datatype xsi:type="RecordT" bitLength="16" subindexAccessSupported="false">
+              <RecordItem subindex="1" bitOffset="2">
+                <SimpleDatatype xsi:type="IntegerT" bitLength="14" />
+                <Name textId="DT_RI_Name9835Actualvalue" />
+              </RecordItem>
+              <RecordItem subindex="2" bitOffset="1">
+                <SimpleDatatype xsi:type="BooleanT">
+                  <SingleValue value="false">
+                    <Name textId="DT_error3674" />
+                  </SingleValue>
+                  <SingleValue value="true">
+                    <Name textId="DT_noerror1087" />
+                  </SingleValue>
+                </SimpleDatatype>
+                <Name textId="DT_RI_Name3640Errorbit" />
+              </RecordItem>
+              <RecordItem subindex="3" bitOffset="0">
+                <SimpleDatatype xsi:type="BooleanT">
+                  <SingleValue value="true">
+                    <Name textId="DT_clearanceacknowledged7155" />
+                  </SingleValue>
+                  <SingleValue value="false">
+                    <Name textId="DT_clearancenotacknowledged1116" />
+                  </SingleValue>
+                </SimpleDatatype>
+                <Name textId="DT_RI_Name6336Clearanceacknowledge" />
+              </RecordItem>
+            </Datatype>
+            <Name textId="PD_IN_ProcessDataInput" />
+          </ProcessDataIn>
+          <ProcessDataOut id="PD_OUT" bitLength="16">
+            <Datatype xsi:type="RecordT" bitLength="16" subindexAccessSupported="false">
+              <RecordItem subindex="1" bitOffset="0">
+                <SimpleDatatype xsi:type="BooleanT">
+                  <SingleValue value="true">
+                    <Name textId="DT_Clearanceallowed9281" />
+                  </SingleValue>
+                  <SingleValue value="false">
+                    <Name textId="DT_Clearancenotallowed605" />
+                  </SingleValue>
+                </SimpleDatatype>
+                <Name textId="DT_RI_Name7071Clearanceflag" />
+              </RecordItem>
+              <RecordItem subindex="2" bitOffset="2">
+                <SimpleDatatype xsi:type="IntegerT" bitLength="14" />
+                <Name textId="DT_RI_Name9123Targetvalue" />
+              </RecordItem>
+            </Datatype>
+            <Name textId="PD_OUT_ProcessDataOutput" />
+          </ProcessDataOut>
+        </ProcessData>
+      </ProcessDataCollection>
+      <ErrorTypeCollection>
+        <StdErrorTypeRef code="128" additionalCode="17" />
+        <StdErrorTypeRef code="128" additionalCode="18" />
+        <StdErrorTypeRef code="128" additionalCode="48" />
+        <StdErrorTypeRef code="128" additionalCode="49" />
+        <StdErrorTypeRef code="128" additionalCode="50" />
+        <StdErrorTypeRef code="128" additionalCode="51" />
+        <StdErrorTypeRef code="128" additionalCode="52" />
+        <StdErrorTypeRef code="128" additionalCode="53" />
+        <StdErrorTypeRef code="128" additionalCode="65" />
+        <StdErrorTypeRef code="128" additionalCode="33" />
+        <StdErrorTypeRef code="128" additionalCode="34" />
+        <StdErrorTypeRef code="128" additionalCode="0" />
+        <StdErrorTypeRef code="128" additionalCode="32" />
+        <StdErrorTypeRef code="128" additionalCode="35" />
+        <StdErrorTypeRef code="128" additionalCode="54" />
+        <StdErrorTypeRef code="128" additionalCode="64" />
+        <StdErrorTypeRef code="128" additionalCode="130" />
+      </ErrorTypeCollection>
+      <UserInterface>
+        <MenuCollection>
+          <Menu id="M_Change_Write_Prot">
+            <Name textId="TI_M_Name_M_Change_Write_Prot" />
+            <VariableRef variableId="V_ChangeCurstomerPassword" />
+          </Menu>
+          <Menu id="M_customer_parameter_properties">
+            <Name textId="TI_M_Name_M_customer_parameter_properties" />
+            <VariableRef variableId="V_CustomerParameterProperties01" />
+            <VariableRef variableId="V_CustomerParameterProperties02" />
+            <VariableRef variableId="V_CustomerParameterProperties03" />
+            <VariableRef variableId="V_CustomerParameterProperties04" />
+            <VariableRef variableId="V_CustomerParameterProperties05" />
+          </Menu>
+          <Menu id="M_customer_parameters">
+            <Name textId="TI_M_Name_M_customer_parameters" />
+            <VariableRef variableId="V_CustomerParameter01" />
+            <VariableRef variableId="V_CustomerParameter02" />
+            <VariableRef variableId="V_CustomerParameter03" />
+            <VariableRef variableId="V_CustomerParameter04" />
+            <VariableRef variableId="V_CustomerParameter05" />
+          </Menu>
+          <Menu id="M_diagnosis">
+            <Name textId="TI_M_Name_M_diagnosis" />
+            <VariableRef variableId="V_ErrorFlagsStored" />
+            <VariableRef variableId="V_ErrorCount" />
+            <VariableRef variableId="V_WarningFlags" />
+            <VariableRef variableId="V_SystemCommand">
+              <Button buttonValue="160">
+                <Description textId="BT_D_160_LeaveFailsafeState" />
+              </Button>
+            </VariableRef>
+          </Menu>
+          <Menu id="M_diagnosis_specialist">
+            <Name textId="TI_M_Name_M_diagnosis_specialist" />
+            <VariableRef variableId="V_ErrorFlagsStored" />
+            <VariableRef variableId="V_ErrorFlagsCurrent" />
+            <VariableRef variableId="V_ErrorCount" />
+            <VariableRef variableId="V_WarningFlags" />
+            <VariableRef variableId="V_DeviceStatus" />
+            <VariableRef variableId="V_DetailedDeviceStatus" />
+            <VariableRef variableId="V_SystemCommand">
+              <Button buttonValue="160">
+                <Description textId="BT_D_160_LeaveFailsafeState" />
+              </Button>
+            </VariableRef>
+            <VariableRef variableId="V_SystemCommand">
+              <Button buttonValue="161">
+                <Description textId="BT_D_161_ResetCustomerParameters" />
+              </Button>
+            </VariableRef>
+          </Menu>
+          <Menu id="M_identification">
+            <Name textId="TI_M_Name_M_identification" />
+            <VariableRef variableId="V_VendorName" accessRightRestriction="ro" />
+            <VariableRef variableId="V_VendorText" />
+            <VariableRef variableId="V_ProductName" />
+            <VariableRef variableId="V_ProductID" />
+            <VariableRef variableId="V_ProductText" />
+            <VariableRef variableId="V_SerialNumber" />
+            <VariableRef variableId="V_HardwareRevision" />
+            <VariableRef variableId="V_FirmwareRevision" accessRightRestriction="ro" />
+            <VariableRef variableId="V_ApplicationSpecificTag" />
+            <VariableRef variableId="V_FunctionTag" />
+            <VariableRef variableId="V_LocationTag" />
+          </Menu>
+          <Menu id="M_observation">
+            <Name textId="TI_M_Name_M_observation" />
+            <VariableRef variableId="V_CurrentTemperature" unitCode="1001" />
+            <VariableRef variableId="V_OperatingTime" unitCode="1058" />
+            <VariableRef variableId="V_TimeBelowTemperature1" unitCode="1058" />
+            <VariableRef variableId="V_TimeAboveTemperature2" unitCode="1058" />
+            <VariableRef variableId="V_TimeAboveTemperature3" unitCode="1058" />
+            <VariableRef variableId="V_PDInputDescriptor" />
+            <VariableRef variableId="V_PDOutputDescriptor" />
+          </Menu>
+          <Menu id="M_parameters">
+            <Name textId="TI_M_Name_M_parameters" />
+            <MenuRef menuId="M_customer_parameters" />
+            <MenuRef menuId="M_customer_parameter_properties" />
+            <MenuRef menuId="M_Write_Protection" />
+            <MenuRef menuId="M_Change_Write_Prot" />
+          </Menu>
+          <Menu id="M_Write_Protection">
+            <Name textId="TI_M_Name_M_Write_Protection" />
+            <VariableRef variableId="V_CustomerPassword" />
+          </Menu>
+        </MenuCollection>
+        <ObserverRoleMenuSet>
+          <IdentificationMenu menuId="M_identification" />
+          <ParameterMenu menuId="M_parameters" />
+          <ObservationMenu menuId="M_observation" />
+          <DiagnosisMenu menuId="M_diagnosis" />
+        </ObserverRoleMenuSet>
+        <MaintenanceRoleMenuSet>
+          <IdentificationMenu menuId="M_identification" />
+          <ParameterMenu menuId="M_parameters" />
+          <ObservationMenu menuId="M_observation" />
+          <DiagnosisMenu menuId="M_diagnosis" />
+        </MaintenanceRoleMenuSet>
+        <SpecialistRoleMenuSet>
+          <IdentificationMenu menuId="M_identification" />
+          <ParameterMenu menuId="M_parameters" />
+          <ObservationMenu menuId="M_observation" />
+          <DiagnosisMenu menuId="M_diagnosis_specialist" />
+        </SpecialistRoleMenuSet>
+      </UserInterface>
+    </DeviceFunction>
+  </ProfileBody>
+  <CommNetworkProfile xsi:type="IOLinkCommNetworkProfileT" iolinkRevision="V1.1">
+    <TransportLayers>
+      <PhysicalLayer bitrate="COM3" minCycleTime="600" sioSupported="true" mSequenceCapability="1">
+        <Connection xsi:type="M12-5ConnectionT">
+          <ProductRef productId="R0000000" />
+          <Wire1 />
+          <Wire2 color="WH" function="P24" />
+          <Wire3 />
+          <Wire4 />
+          <Wire5 color="GN" function="N24" />
+        </Connection>
+      </PhysicalLayer>
+    </TransportLayers>
+    <Test>
+      <Config1 index="253" testValue="0x9C" />
+      <Config2 index="16382" testValue="0x11" />
+      <Config3 index="16" testValue="0x42,0x6f,0x73,0x63,0x68,0x20,0x52,0x65,0x78,0x72,0x6f,0x74,0x68,0x20,0x41,0x47" />
+    </Test>
+  </CommNetworkProfile>
+  <ExternalTextCollection>
+    <PrimaryLanguage xml:lang="en">
+      <Text id="TI_VendorText" value="www.boschrexroth.com" />
+      <Text id="TI_Device_Name" value="IOL valve controller" />
+      <Text id="TI_DeviceFamily" value="4WRPEH10-3X" />
+      <Text id="TI_VendorUrl" value="www.boschrexroth.com" />
+      <Text id="TI_Device_R0000000_Name" value="4WRPEH10-3X" />
+      <Text id="TI_Device_R0000000_Description" value="Proportional Valve" />
+      <Text id="DT_RI_Name5287CollectiveFault" value="Collective fault" />
+      <Text id="DT_RI_Name420124VError" value="Error 24V valve supply" />
+      <Text id="DT_RI_Name4469ValveError" value="Error valve electronics" />
+      <Text id="DT_RI_Name3934InternalError" value="Internal error" />
+      <Text id="DT_RI_Name2853Reserved" value="Reserved" />
+      <Text id="DT_RI_Name7387IOLerror" value="Communication error" />
+      <Text id="DT_RI_Name9214Minimum" value="Minimum" />
+      <Text id="DT_RI_Name7624Maximum" value="Maximum" />
+      <Text id="DT_RI_Name7053Default" value="Default" />
+      <Text id="Std_V_609747" value="Leave failsafe state" />
+      <Text id="Std_V_741467" value="Reset customer parameters" />
+      <Text id="TI_V_N_ProcessDataInputDescriptor" value="Process data input descriptor" />
+      <Text id="TI_V_N_ProcessDataOutputDescriptor" value="Process data output descriptor" />
+      <Text id="TI_V_N_FunctionTag" value="Function Tag" />
+      <Text id="TI_V_N_LocationTag" value="Location Tag" />
+      <Text id="V_N_WarningFlags" value="Warning flags" />
+      <Text id="DT_RI_Name2367OvertemperatureFlag" value="Overtemperature warning" />
+      <Text id="V_N_OperatingTime" value="Operating time" />
+      <Text id="V_N_ErrorFlagsStored" value="Error flags" />
+      <Text id="V_N_ErrorFlagsCurrent" value="Current errors" />
+      <Text id="V_N_TimebelowTemperature1" value="Time Temperature 1" />
+      <Text id="V_N_TimeaboveTemperature2" value="Time Temperature 2" />
+      <Text id="V_N_TimeaboveTemperature3" value="Time Temperature 3" />
+      <Text id="TI_V_N_CurrentTemperature" value="Temperature" />
+      <Text id="TI_V_N_ChangeCustomerPassword" value="Change write protection string" />
+      <Text id="TI_V_N_CustomerPassword" value="Write protection" />
+      <Text id="TI_V_N_Offset" value="Offset" />
+      <Text id="TI_V_N_RampSlope1" value="Ramp slope 1" />
+      <Text id="TI_V_N_RampSlope2" value="Ramp slope 2" />
+      <Text id="TI_V_N_RampSlope3" value="Ramp slope 3" />
+      <Text id="TI_V_N_RampSlope4" value="Ramp slope 4" />
+      <Text id="V_N_OverlapcompensationON" value="Overlap compensation ON" />
+      <Text id="V_N_CustomerParameter07" value="Customer parameter 07" />
+      <Text id="V_N_CustomerParameter08" value="Customer parameter 08" />
+      <Text id="V_N_CustomerParameter09" value="Customer parameter 09" />
+      <Text id="V_N_CustomerParameter10" value="Customer parameter 10" />
+      <Text id="V_N_CustomerParameter11" value="Customer parameter 11" />
+      <Text id="V_N_CustomerParameter12" value="Customer parameter 12" />
+      <Text id="V_N_CustomerParameter13" value="Customer parameter 13" />
+      <Text id="V_N_CustomerParameter14" value="Customer parameter 14" />
+      <Text id="V_N_CustomerParameter15" value="Customer parameter 15" />
+      <Text id="V_N_CustomerParameter16" value="Customer parameter 16" />
+      <Text id="V_N_CustomerParameter17" value="Customer parameter 17" />
+      <Text id="V_N_CustomerParameter18" value="Customer parameter 18" />
+      <Text id="V_N_CustomerParameter19" value="Customer parameter 19" />
+      <Text id="V_N_CustomerParameter20" value="Customer parameter 20" />
+      <Text id="TI_V_N_CustomerParameterProperties01" value="Properties offset" />
+      <Text id="TI_V_N_CustomerParameterProperties02" value="Properties ramp slope 1" />
+      <Text id="TI_V_N_CustomerParameterProperties03" value="Properties ramp slope 2" />
+      <Text id="TI_V_N_CustomerParameterProperties04" value="Properties ramp slope 3" />
+      <Text id="TI_V_N_CustomerParameterProperties05" value="Properties ramp slope 4" />
+      <Text id="TI_V_N_CustomerParameterProperties06" value="Properties overlap compensation ON" />
+      <Text id="TI_V_N_CustomerParameterProperties07" value="Customer parameter properties 07" />
+      <Text id="TI_V_N_CustomerParameterProperties08" value="Customer parameter properties 08" />
+      <Text id="TI_V_N_CustomerParameterProperties09" value="Customer parameter properties 09" />
+      <Text id="TI_V_N_CustomerParameterProperties10" value="Customer parameter properties 10" />
+      <Text id="TI_V_N_CustomerParameterProperties11" value="Customer parameter properties 11" />
+      <Text id="TI_V_N_CustomerParameterProperties12" value="Customer parameter properties 12" />
+      <Text id="TI_V_N_CustomerParameterProperties13" value="Customer parameter properties 13" />
+      <Text id="TI_V_N_CustomerParameterProperties14" value="Customer parameter properties 14" />
+      <Text id="TI_V_N_CustomerParameterProperties15" value="Customer parameter properties 15" />
+      <Text id="TI_V_N_CustomerParameterProperties16" value="Customer parameter properties 16" />
+      <Text id="TI_V_N_CustomerParameterProperties17" value="Customer parameter properties 17" />
+      <Text id="TI_V_N_CustomerParameterProperties18" value="Customer parameter properties 18" />
+      <Text id="TI_V_N_CustomerParameterProperties19" value="Customer parameter properties 19" />
+      <Text id="TI_V_N_CustomerParameterProperties20" value="Customer parameter properties 20" />
+      <Text id="TI_V_N_TestParamOneByte" value="TestParamOneByte" />
+      <Text id="TI_V_N_TestParameter" value="Test Parameter" />
+      <Text id="PD_IN_ProcessDataInput" value="Process data input" />
+      <Text id="DT_RI_Name9835Actualvalue" value="Actual value" />
+      <Text id="DT_RI_Name3640Errorbit" value="Valve ok Flag" />
+      <Text id="DT_error3674" value="Error" />
+      <Text id="DT_noerror1087" value="Valve ok" />
+      <Text id="DT_RI_Name6336Clearanceacknowledge" value="Valve status" />
+      <Text id="DT_clearanceacknowledged7155" value="Valve ON" />
+      <Text id="DT_clearancenotacknowledged1116" value="Valve OFF" />
+      <Text id="PD_OUT_ProcessDataOutput" value="Process data output" />
+      <Text id="DT_RI_Name7071Clearanceflag" value="Enable" />
+      <Text id="DT_Clearanceallowed9281" value="Enable high" />
+      <Text id="DT_Clearancenotallowed605" value="Enable low" />
+      <Text id="DT_RI_Name9123Targetvalue" value="Valve command value" />
+      <Text id="TI_M_Name_M_Change_Write_Prot" value="Change write protection string" />
+      <Text id="TI_M_Name_M_customer_parameter_properties" value="Customer parameter properties" />
+      <Text id="TI_M_Name_M_customer_parameters" value="Customer parameters" />
+      <Text id="TI_M_Name_M_diagnosis" value="Diagnosis" />
+      <Text id="BT_D_160_LeaveFailsafeState" value="Leave failsafe state" />
+      <Text id="TI_M_Name_M_diagnosis_specialist" value="Diagnosis" />
+      <Text id="BT_D_161_ResetCustomerParameters" value="Reset customer parameters to default values" />
+      <Text id="TI_M_Name_M_identification" value="Identification" />
+      <Text id="TI_M_Name_M_observation" value="Observation" />
+      <Text id="TI_M_Name_M_parameters" value="Parameters" />
+      <Text id="TI_M_Name_M_Write_Protection" value="Write protection" />
+    </PrimaryLanguage>
+  </ExternalTextCollection>
+  <Stamp crc="616547632"><Checker name="IODD-Checker V1.1.4" version="V1.1.4.0"/></Stamp>
+</IODevice>
