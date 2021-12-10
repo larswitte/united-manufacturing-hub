@@ -43,8 +43,6 @@ func TestUnmarshalIoddFile(t *testing.T) {
 
 	//Check correct length of Text[] in ExternalTextCollection>PrimaryLanguage
 	if !reflect.DeepEqual(len(ioDevice.ExternalTextCollection.PrimaryLanguage.Text), 177) {
-		fmt.Println(len(ioDevice.ExternalTextCollection.PrimaryLanguage.Text))
-		fmt.Println(ioDevice.ExternalTextCollection)
 		t.Error()
 	}
 	//Id: should give out "TI_ProductName0"
@@ -62,6 +60,15 @@ func TestUnmarshalIoddFile(t *testing.T) {
 	}
 	//Value: type should be string
 	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ExternalTextCollection.PrimaryLanguage.Text[0].Value).Kind(), reflect.String) {
+		t.Error()
+	}
+
+	//bitLength (Datatype): should give out 32
+	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.BitLength, 32) {
+		t.Error()
+	}
+	//bitLength (Datatype): should be int
+	if !reflect.DeepEqual(reflect.TypeOf(ioDevice.ProfileBody.DeviceFunction.ProcessDataCollection.ProcessData.ProcessDataIn.Datatype.BitLength).Kind(), reflect.Int) {
 		t.Error()
 	}
 
