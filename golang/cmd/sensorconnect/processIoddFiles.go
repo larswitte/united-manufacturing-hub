@@ -75,7 +75,17 @@ func UnmarshalIoddFile(ioddFile []uint8) (IoDevice, error) {
 	// Unmarshal file with Unmarshal
 	err := xml.Unmarshal(ioddFile, &payload)
 	if err != nil {
-		panic(err)
+		panic(err) //Todo change to zap stuff
 	}
 	return payload, err
+}
+
+func GetIoDevice(vendorId int64, deviceId int) (ioDevice IoDevice, err error) {
+	filemap, err := GetIoddFile(vendorId, deviceId)
+	if err != nil {
+		return
+	}
+	var file []uint8 = filemap[0].File
+	ioDevice, err = UnmarshalIoddFile(file)
+	return
 }

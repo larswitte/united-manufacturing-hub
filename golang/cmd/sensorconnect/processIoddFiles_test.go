@@ -439,3 +439,17 @@ func TestUnmarshalIoddFile_ifmRfid(t *testing.T) {
 		t.Error()
 	}
 }
+
+func TestDownloadAndUnmarshal(t *testing.T) {
+	ioDevice, err := GetIoDevice(42, 278531)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(ioDevice)
+
+	//DeviceId: should give out 967
+	if !reflect.DeepEqual(ioDevice.ProfileBody.DeviceIdentity.DeviceId, 278531) {
+		fmt.Println(ioDevice.ProfileBody.DeviceIdentity.DeviceId)
+		t.Error()
+	}
+}

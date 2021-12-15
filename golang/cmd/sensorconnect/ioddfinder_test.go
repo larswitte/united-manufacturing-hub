@@ -33,7 +33,7 @@ func AssertIoddFileGetter(vendorId int64, deviceId int, filemaplen int) error {
 		fmt.Println("====")
 		fmt.Println(file.Name)
 		fmt.Println(file.Context)
-
+		fmt.Println(file.File)
 	}
 
 	return nil
