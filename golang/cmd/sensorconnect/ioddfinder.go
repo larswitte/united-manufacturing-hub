@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"reflect"
 	"strings"
 )
 
@@ -44,11 +45,19 @@ func GetIoddFile(vendorId int64, deviceId int) (files []IoDDFile, err error) {
 		var ioddzip []byte
 		ioddzip, err = getUrl(fmt.Sprintf("https://ioddfinder.io-link.com/api/vendors/%d/iodds/%d/files/zip/rated", vendorId, ioddId))
 		if err != nil {
+			fmt.Println("Error at download of ioddzip with IoddID:")
+			fmt.Println(ioddId)
 			return
 		}
 		var zipReader *zip.Reader
 		zipReader, err = zip.NewReader(bytes.NewReader(ioddzip), int64(len(ioddzip)))
 		if err != nil {
+			fmt.Println("Error at parsing zip into zipReader")
+			fmt.Println(string(ioddzip))
+			fmt.Println(ioddId)
+			fmt.Println(vendorId)
+			fmt.Println(reflect.TypeOf(ioddzip))
+			fmt.Println(fmt.Sprintf("https://ioddfinder.io-link.com/api/vendors/%d/iodds/%d/files/zip/rated", vendorId, ioddId))
 			return
 		}
 
@@ -92,6 +101,7 @@ func readZipFile(zf *zip.File) ([]byte, error) {
 func getUrl(url string) (body []byte, err error) {
 	var resp *http.Response
 	resp, err = http.Get(url)
+	fmt.Println(*resp)
 	defer resp.Body.Close()
 	if err != nil {
 		return
