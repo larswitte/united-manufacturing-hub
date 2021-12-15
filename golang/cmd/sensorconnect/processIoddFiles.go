@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/xml"
+	"fmt"
 )
 
 type IoDevice struct {
@@ -85,7 +86,8 @@ func GetIoDevice(vendorId int64, deviceId int) (ioDevice IoDevice, err error) {
 	if err != nil {
 		return
 	}
-	var file []uint8 = filemap[0].File
-	ioDevice, err = UnmarshalIoddFile(file)
+	var selectedFileFromFilemap []uint8 = filemap[0].File
+	fmt.Println("Selected file: " + filemap[0].Name)
+	ioDevice, err = UnmarshalIoddFile(selectedFileFromFilemap)
 	return
 }

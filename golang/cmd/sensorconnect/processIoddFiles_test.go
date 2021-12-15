@@ -2,27 +2,15 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"path/filepath"
 	"reflect" //for reading out type of variable
 	"testing"
 )
 
 func TestUnmarshalIoddFile_ifm(t *testing.T) {
-	//Read File
-	absolutePath, _ := filepath.Abs("../sensorconnect/ifm-0002BA-20170227-IODD1.1.xml")
-	dat, err := ioutil.ReadFile(absolutePath)
+	// Download and Unmarshal IODD file
+	ioDevice, err := GetIoDevice(310, 698)
 	if err != nil {
-		panic(err)
-	}
-	fmt.Println("Contents of file:", string(dat))
-
-	// Unmarshal file
-	var ioDevice IoDevice
-	ioDevice, err = UnmarshalIoddFile(dat)
-	if err != nil {
-		fmt.Println(err)
-		t.Error()
+		t.Error(err)
 	}
 
 	//DeviceId: should give out 698
@@ -117,20 +105,10 @@ func TestUnmarshalIoddFile_ifm(t *testing.T) {
 }
 
 func TestUnmarshalIoddFile_rexroth(t *testing.T) {
-	//Read File
-	absolutePath, _ := filepath.Abs("../sensorconnect/BoschRexroth-4WRPEH10-3X-20191011-IODD1.1.xml")
-	dat, err := ioutil.ReadFile(absolutePath)
+	// Download and Unmarshal IODD file
+	ioDevice, err := GetIoDevice(287, 2228227)
 	if err != nil {
-		panic(err)
-	}
-	fmt.Println("Contents of file:", string(dat))
-
-	// Unmarshal file
-	var ioDevice IoDevice
-	ioDevice, err = UnmarshalIoddFile(dat)
-	if err != nil {
-		fmt.Println(err)
-		t.Error()
+		t.Error(err)
 	}
 
 	//DeviceId: should give out 2228227
@@ -225,20 +203,10 @@ func TestUnmarshalIoddFile_rexroth(t *testing.T) {
 }
 
 func TestUnmarshalIoddFile_siemens(t *testing.T) {
-	//Read File
-	absolutePath, _ := filepath.Abs("../sensorconnect/Siemens-SIRIUS-3SU1-4DI4DQ-20160602-IODD1.1.xml")
-	dat, err := ioutil.ReadFile(absolutePath)
+	// Download and Unmarshal IODD file
+	ioDevice, err := GetIoDevice(42, 278531)
 	if err != nil {
-		panic(err)
-	}
-	fmt.Println("Contents of file:", string(dat))
-
-	// Unmarshal file
-	var ioDevice IoDevice
-	ioDevice, err = UnmarshalIoddFile(dat)
-	if err != nil {
-		fmt.Println(err)
-		t.Error()
+		t.Error(err)
 	}
 
 	//DeviceId: should give out 278531
@@ -260,7 +228,8 @@ func TestUnmarshalIoddFile_siemens(t *testing.T) {
 	}
 
 	//Check correct length of Text[] in ExternalTextCollection>PrimaryLanguage
-	if !reflect.DeepEqual(len(ioDevice.ExternalTextCollection.PrimaryLanguage.Text), 137) {
+	if !reflect.DeepEqual(len(ioDevice.ExternalTextCollection.PrimaryLanguage.Text), 123) {
+		fmt.Println(len(ioDevice.ExternalTextCollection.PrimaryLanguage.Text))
 		t.Error()
 	}
 	//Id: should give out "TI_VendorText"
@@ -333,20 +302,12 @@ func TestUnmarshalIoddFile_siemens(t *testing.T) {
 }
 
 func TestUnmarshalIoddFile_ifmRfid(t *testing.T) {
-	//Read File
-	absolutePath, _ := filepath.Abs("../sensorconnect/ifm-0003C7-20190125-IODD1.1.xml")
-	dat, err := ioutil.ReadFile(absolutePath)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("Contents of file:", string(dat))
-
-	// Unmarshal file
-	var ioDevice IoDevice
-	ioDevice, err = UnmarshalIoddFile(dat)
+	// Download and Unmarshal IODD file
+	ioDevice, err := GetIoDevice(310, 967)
+	fmt.Println(ioDevice)
 	if err != nil {
 		fmt.Println(err)
-		t.Error()
+		t.Error(err)
 	}
 
 	//DeviceId: should give out 967
