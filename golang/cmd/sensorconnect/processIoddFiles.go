@@ -5,6 +5,7 @@ import (
 	"fmt"
 )
 
+// Parsing of Iodd File content
 type IoDevice struct {
 	ProfileBody            ProfileBody            `xml:"ProfileBody"`
 	ExternalTextCollection ExternalTextCollection `xml:"ExternalTextCollection"`
@@ -70,6 +71,12 @@ type SimpleDatatype struct {
 	FixedLength int    `xml:"fixedLength,attr"`
 }
 
+//Further Datastructures
+type IoddFilemapKey struct {
+	VendorId int64
+	DeviceId int
+}
+
 func UnmarshalIoddFile(ioddFile []uint8) (IoDevice, error) {
 	payload := IoDevice{}
 
@@ -82,6 +89,8 @@ func UnmarshalIoddFile(ioddFile []uint8) (IoDevice, error) {
 }
 
 func GetIoDevice(vendorId int64, deviceId int) (ioDevice IoDevice, err error) {
+	ioddFilemapKey := IoddFilemapKey{VendorId: vendorId, DeviceId: deviceId}
+
 	filemap, err := GetIoddFile(vendorId, deviceId)
 	if err != nil {
 		return
@@ -90,4 +99,14 @@ func GetIoDevice(vendorId int64, deviceId int) (ioDevice IoDevice, err error) {
 	fmt.Println("Selected file: " + filemap[0].Name)
 	ioDevice, err = UnmarshalIoddFile(selectedFileFromFilemap)
 	return
+}
+
+// Stores a filemap on harddrive
+func CacheFilemap(ioddFilemapKey IoddFilemapKey, filemap []IoDDFile) {
+
+}
+
+// Trys to retrieve Filemap from harddrive
+func GetFilemapFromCache(ioddFilemapKey IoddFilemapKey) (filemap, filemapNotOnHarddrive, error) {
+
 }
